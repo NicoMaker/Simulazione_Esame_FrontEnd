@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
-import { useApp } from '../App';
-import { SPACE_TYPE_LABELS, STATUS_LABELS } from '../data';
+import React, { useState } from "react";
+import { useApp } from "../App";
+import { SPACE_TYPE_LABELS, STATUS_LABELS } from "../data";
 import {
-  Plus, Search, LayoutGrid, List, Users, DollarSign,
-  Wrench, CheckCircle, Trash2, Edit3, X, Building2,
-  MonitorPlay, Briefcase
-} from 'lucide-react';
+  Plus,
+  Search,
+  LayoutGrid,
+  List,
+  Users,
+  DollarSign,
+  Wrench,
+  CheckCircle,
+  Trash2,
+  Edit3,
+  X,
+  Building2,
+  MonitorPlay,
+  Briefcase,
+} from "lucide-react";
 
 const TYPE_ICONS = { desk: MonitorPlay, meeting: Users, office: Briefcase };
-const TYPE_COLORS = { desk: 'var(--accent)', meeting: 'var(--violet)', office: 'var(--emerald)' };
+const TYPE_COLORS = {
+  desk: "var(--accent)",
+  meeting: "var(--violet)",
+  office: "var(--emerald)",
+};
 
 function StatusBadge({ status }) {
   return (
@@ -20,51 +35,96 @@ function StatusBadge({ status }) {
 }
 
 function TypeBadge({ type }) {
-  return <span className={`badge badge-${type}`}>{SPACE_TYPE_LABELS[type] || type}</span>;
+  return (
+    <span className={`badge badge-${type}`}>
+      {SPACE_TYPE_LABELS[type] || type}
+    </span>
+  );
 }
 
 function AddSpaceModal({ onClose, onAdd }) {
-  const [form, setForm] = useState({ name: '', type: 'desk', capacity: 1, hourlyRate: 10, floor: 1, amenities: '' });
+  const [form, setForm] = useState({
+    name: "",
+    type: "desk",
+    capacity: 1,
+    hourlyRate: 10,
+    floor: 1,
+    amenities: "",
+  });
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const e = {};
-    if (!form.name.trim()) e.name = 'Nome obbligatorio';
-    if (form.capacity < 1) e.capacity = 'Capienza minima 1';
-    if (form.hourlyRate < 1) e.hourlyRate = 'Tariffa minima €1';
+    if (!form.name.trim()) e.name = "Nome obbligatorio";
+    if (form.capacity < 1) e.capacity = "Capienza minima 1";
+    if (form.hourlyRate < 1) e.hourlyRate = "Tariffa minima €1";
     return e;
   };
 
   const handleSubmit = () => {
     const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    const amenitiesArr = form.amenities.split(',').map(a => a.trim()).filter(Boolean);
-    onAdd({ ...form, capacity: Number(form.capacity), hourlyRate: Number(form.hourlyRate), floor: Number(form.floor), amenities: amenitiesArr });
+    if (Object.keys(e).length) {
+      setErrors(e);
+      return;
+    }
+    const amenitiesArr = form.amenities
+      .split(",")
+      .map((a) => a.trim())
+      .filter(Boolean);
+    onAdd({
+      ...form,
+      capacity: Number(form.capacity),
+      hourlyRate: Number(form.hourlyRate),
+      floor: Number(form.floor),
+      amenities: amenitiesArr,
+    });
     onClose();
   };
 
-  const f = (key, val) => setForm(p => ({ ...p, [key]: val }));
+  const f = (key, val) => setForm((p) => ({ ...p, [key]: val }));
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div
+      className="modal-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal">
         <div className="modal-header">
           <div>
             <div className="modal-title">➕ Aggiungi Spazio</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 3 }}>Inserisci i dati del nuovo spazio</div>
+            <div
+              style={{
+                fontSize: "0.8rem",
+                color: "var(--text-muted)",
+                marginTop: 3,
+              }}
+            >
+              Inserisci i dati del nuovo spazio
+            </div>
           </div>
-          <button className="modal-close" onClick={onClose}><X size={16} /></button>
+          <button className="modal-close" onClick={onClose}>
+            <X size={16} />
+          </button>
         </div>
         <div className="modal-body">
           <div className="form-grid">
             <div className="form-group full">
               <label className="form-label">Nome Spazio / Sala *</label>
-              <input className={`form-input ${errors.name ? 'error' : ''}`} placeholder="es. Sala Pegaso, Scrivania Zeta..." value={form.name} onChange={e => f('name', e.target.value)} />
+              <input
+                className={`form-input ${errors.name ? "error" : ""}`}
+                placeholder="es. Sala Pegaso, Scrivania Zeta..."
+                value={form.name}
+                onChange={(e) => f("name", e.target.value)}
+              />
               {errors.name && <span className="form-error">{errors.name}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Tipologia *</label>
-              <select className="form-select" value={form.type} onChange={e => f('type', e.target.value)}>
+              <select
+                className="form-select"
+                value={form.type}
+                onChange={(e) => f("type", e.target.value)}
+              >
                 <option value="desk">Scrivania Dedicata</option>
                 <option value="meeting">Sala Riunioni</option>
                 <option value="office">Ufficio Privato</option>
@@ -72,32 +132,78 @@ function AddSpaceModal({ onClose, onAdd }) {
             </div>
             <div className="form-group">
               <label className="form-label">Piano</label>
-              <input type="number" className="form-input" min="1" max="10" value={form.floor} onChange={e => f('floor', e.target.value)} />
+              <input
+                type="number"
+                className="form-input"
+                min="1"
+                max="10"
+                value={form.floor}
+                onChange={(e) => f("floor", e.target.value)}
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Capienza (persone) *</label>
-              <input type="number" className={`form-input ${errors.capacity ? 'error' : ''}`} min="1" value={form.capacity} onChange={e => f('capacity', e.target.value)} />
-              {errors.capacity && <span className="form-error">{errors.capacity}</span>}
+              <input
+                type="number"
+                className={`form-input ${errors.capacity ? "error" : ""}`}
+                min="1"
+                value={form.capacity}
+                onChange={(e) => f("capacity", e.target.value)}
+              />
+              {errors.capacity && (
+                <span className="form-error">{errors.capacity}</span>
+              )}
             </div>
             <div className="form-group">
               <label className="form-label">Tariffa Oraria (€) *</label>
-              <input type="number" className={`form-input ${errors.hourlyRate ? 'error' : ''}`} min="1" value={form.hourlyRate} onChange={e => f('hourlyRate', e.target.value)} />
-              {errors.hourlyRate && <span className="form-error">{errors.hourlyRate}</span>}
+              <input
+                type="number"
+                className={`form-input ${errors.hourlyRate ? "error" : ""}`}
+                min="1"
+                value={form.hourlyRate}
+                onChange={(e) => f("hourlyRate", e.target.value)}
+              />
+              {errors.hourlyRate && (
+                <span className="form-error">{errors.hourlyRate}</span>
+              )}
             </div>
             <div className="form-group full">
-              <label className="form-label">Dotazioni (separate da virgola)</label>
-              <input className="form-input" placeholder="es. WiFi, Proiettore, Lavagna, VC..." value={form.amenities} onChange={e => f('amenities', e.target.value)} />
+              <label className="form-label">
+                Dotazioni (separate da virgola)
+              </label>
+              <input
+                className="form-input"
+                placeholder="es. WiFi, Proiettore, Lavagna, VC..."
+                value={form.amenities}
+                onChange={(e) => f("amenities", e.target.value)}
+              />
             </div>
           </div>
           {form.hourlyRate && (
-            <div style={{ marginTop: 14, padding: '10px 14px', background: 'var(--bg-elevated)', borderRadius: 'var(--radius-md)', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-              💡 Tariffa giornaliera stimata (8h): <strong style={{ color: 'var(--accent)' }}>€{(form.hourlyRate * 8).toFixed(0)}</strong>
+            <div
+              style={{
+                marginTop: 14,
+                padding: "10px 14px",
+                background: "var(--bg-elevated)",
+                borderRadius: "var(--radius-md)",
+                fontSize: "0.82rem",
+                color: "var(--text-secondary)",
+              }}
+            >
+              💡 Tariffa giornaliera stimata (8h):{" "}
+              <strong style={{ color: "var(--accent)" }}>
+                €{(form.hourlyRate * 8).toFixed(0)}
+              </strong>
             </div>
           )}
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Annulla</button>
-          <button className="btn btn-primary" onClick={handleSubmit}><Plus size={15} /> Aggiungi Spazio</button>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Annulla
+          </button>
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            <Plus size={15} /> Aggiungi Spazio
+          </button>
         </div>
       </div>
     </div>
@@ -111,32 +217,55 @@ function SpaceCardGrid({ space, onStatusChange, onDelete }) {
     <div className="space-card">
       <div className="space-card-top">
         <div>
-          <div className="space-card-type">{SPACE_TYPE_LABELS[space.type]} · Piano {space.floor}</div>
+          <div className="space-card-type">
+            {SPACE_TYPE_LABELS[space.type]} · Piano {space.floor}
+          </div>
           <div className="space-card-name">{space.name}</div>
         </div>
         <StatusBadge status={space.status} />
       </div>
       <div className="space-card-meta">
-        <div className="space-meta-item"><Users size={12} /> {space.capacity} pers.</div>
-        <div className="space-meta-item"><Icon size={12} /> {SPACE_TYPE_LABELS[space.type]}</div>
+        <div className="space-meta-item">
+          <Users size={12} /> {space.capacity} pers.
+        </div>
+        <div className="space-meta-item">
+          <Icon size={12} /> {SPACE_TYPE_LABELS[space.type]}
+        </div>
       </div>
       <div className="amenity-tags">
-        {(space.amenities || []).slice(0, 4).map(a => <span key={a} className="amenity-tag">{a}</span>)}
-        {(space.amenities || []).length > 4 && <span className="amenity-tag">+{space.amenities.length - 4}</span>}
+        {(space.amenities || []).slice(0, 4).map((a) => (
+          <span key={a} className="amenity-tag">
+            {a}
+          </span>
+        ))}
+        {(space.amenities || []).length > 4 && (
+          <span className="amenity-tag">+{space.amenities.length - 4}</span>
+        )}
       </div>
-      <div className="space-card-rate">€{space.hourlyRate} <span>/ora</span></div>
+      <div className="space-card-rate">
+        €{space.hourlyRate} <span>/ora</span>
+      </div>
       <div className="space-card-actions">
-        {space.status !== 'available' && (
-          <button className="btn btn-success btn-sm" onClick={() => onStatusChange(space.id, 'available')}>
+        {space.status !== "available" && (
+          <button
+            className="btn btn-success btn-sm"
+            onClick={() => onStatusChange(space.id, "available")}
+          >
             <CheckCircle size={13} /> Disponibile
           </button>
         )}
-        {space.status !== 'maintenance' && (
-          <button className="btn btn-secondary btn-sm" onClick={() => onStatusChange(space.id, 'maintenance')}>
+        {space.status !== "maintenance" && (
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => onStatusChange(space.id, "maintenance")}
+          >
             <Wrench size={13} /> Manutenzione
           </button>
         )}
-        <button className="btn btn-danger btn-sm" onClick={() => onDelete(space.id)}>
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => onDelete(space.id)}
+        >
           <Trash2 size={13} />
         </button>
       </div>
@@ -146,16 +275,17 @@ function SpaceCardGrid({ space, onStatusChange, onDelete }) {
 
 export default function SpacesManager() {
   const { spaces, addSpace, updateSpaceStatus, deleteSpace } = useApp();
-  const [filter, setFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [search, setSearch] = useState('');
-  const [view, setView] = useState('grid');
+  const [filter, setFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [view, setView] = useState("grid");
   const [showModal, setShowModal] = useState(false);
 
-  const filtered = spaces.filter(s => {
-    if (filter !== 'all' && s.type !== filter) return false;
-    if (statusFilter !== 'all' && s.status !== statusFilter) return false;
-    if (search && !s.name.toLowerCase().includes(search.toLowerCase())) return false;
+  const filtered = spaces.filter((s) => {
+    if (filter !== "all" && s.type !== filter) return false;
+    if (statusFilter !== "all" && s.status !== statusFilter) return false;
+    if (search && !s.name.toLowerCase().includes(search.toLowerCase()))
+      return false;
     return true;
   });
 
@@ -164,7 +294,10 @@ export default function SpacesManager() {
       <div className="page-header-row">
         <div>
           <div className="page-title">Gestione Spazi</div>
-          <div className="page-subtitle">{spaces.length} spazi totali · {spaces.filter(s => s.status === 'available').length} disponibili</div>
+          <div className="page-subtitle">
+            {spaces.length} spazi totali ·{" "}
+            {spaces.filter((s) => s.status === "available").length} disponibili
+          </div>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
           <Plus size={16} /> Nuovo Spazio
@@ -172,36 +305,74 @@ export default function SpacesManager() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
         <div className="filter-bar" style={{ marginBottom: 0, flex: 1 }}>
           {[
-            { id: 'all', label: 'Tutti' },
-            { id: 'desk', label: '💻 Scrivanie' },
-            { id: 'meeting', label: '🤝 Sale Riunioni' },
-            { id: 'office', label: '🏠 Uffici' },
-          ].map(f => (
-            <button key={f.id} className={`filter-chip ${filter === f.id ? 'active' : ''}`} onClick={() => setFilter(f.id)}>
+            { id: "all", label: "Tutti" },
+            { id: "desk", label: "💻 Scrivanie" },
+            { id: "meeting", label: "🤝 Sale Riunioni" },
+            { id: "office", label: "🏠 Uffici" },
+          ].map((f) => (
+            <button
+              key={f.id}
+              className={`filter-chip ${filter === f.id ? "active" : ""}`}
+              onClick={() => setFilter(f.id)}
+            >
               {f.label}
             </button>
           ))}
-          <div style={{ width: 1, height: 20, background: 'var(--border)', margin: '0 4px' }} />
+          <div
+            style={{
+              width: 1,
+              height: 20,
+              background: "var(--border)",
+              margin: "0 4px",
+            }}
+          />
           {[
-            { id: 'all', label: 'Tutti stati' },
-            { id: 'available', label: '✅ Disponibili' },
-            { id: 'maintenance', label: '🔧 Manutenzione' },
-          ].map(f => (
-            <button key={f.id} className={`filter-chip ${statusFilter === f.id ? 'active' : ''}`} onClick={() => setStatusFilter(f.id)}>
+            { id: "all", label: "Tutti stati" },
+            { id: "available", label: "✅ Disponibili" },
+            { id: "maintenance", label: "🔧 Manutenzione" },
+          ].map((f) => (
+            <button
+              key={f.id}
+              className={`filter-chip ${statusFilter === f.id ? "active" : ""}`}
+              onClick={() => setStatusFilter(f.id)}
+            >
               {f.label}
             </button>
           ))}
         </div>
         <div className="search-wrap" style={{ maxWidth: 220 }}>
           <Search className="search-icon" />
-          <input className="search-input" placeholder="Cerca spazio..." value={search} onChange={e => setSearch(e.target.value)} />
+          <input
+            className="search-input"
+            placeholder="Cerca spazio..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
         <div className="view-toggle">
-          <button className={`view-toggle-btn ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')}><LayoutGrid size={15} /></button>
-          <button className={`view-toggle-btn ${view === 'table' ? 'active' : ''}`} onClick={() => setView('table')}><List size={15} /></button>
+          <button
+            className={`view-toggle-btn ${view === "grid" ? "active" : ""}`}
+            onClick={() => setView("grid")}
+          >
+            <LayoutGrid size={15} />
+          </button>
+          <button
+            className={`view-toggle-btn ${view === "table" ? "active" : ""}`}
+            onClick={() => setView("table")}
+          >
+            <List size={15} />
+          </button>
         </div>
       </div>
 
@@ -211,10 +382,15 @@ export default function SpacesManager() {
           <h3>Nessuno spazio trovato</h3>
           <p>Prova a modificare i filtri di ricerca</p>
         </div>
-      ) : view === 'grid' ? (
+      ) : view === "grid" ? (
         <div className="spaces-grid">
-          {filtered.map(s => (
-            <SpaceCardGrid key={s.id} space={s} onStatusChange={updateSpaceStatus} onDelete={deleteSpace} />
+          {filtered.map((s) => (
+            <SpaceCardGrid
+              key={s.id}
+              space={s}
+              onStatusChange={updateSpaceStatus}
+              onDelete={deleteSpace}
+            />
           ))}
         </div>
       ) : (
@@ -234,33 +410,77 @@ export default function SpacesManager() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(s => (
+                {filtered.map((s) => (
                   <tr key={s.id}>
                     <td>{s.name}</td>
-                    <td><TypeBadge type={s.type} /></td>
-                    <td>{s.floor}° piano</td>
-                    <td><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={12} />{s.capacity}</span></td>
-                    <td style={{ color: 'var(--accent)', fontWeight: 700, fontFamily: 'var(--font-display)' }}>€{s.hourlyRate}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-                        {(s.amenities || []).slice(0, 3).map(a => <span key={a} className="amenity-tag">{a}</span>)}
-                        {(s.amenities || []).length > 3 && <span className="amenity-tag">+{s.amenities.length - 3}</span>}
+                      <TypeBadge type={s.type} />
+                    </td>
+                    <td>{s.floor}° piano</td>
+                    <td>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                        }}
+                      >
+                        <Users size={12} />
+                        {s.capacity}
+                      </span>
+                    </td>
+                    <td
+                      style={{
+                        color: "var(--accent)",
+                        fontWeight: 700,
+                        fontFamily: "var(--font-display)",
+                      }}
+                    >
+                      €{s.hourlyRate}
+                    </td>
+                    <td>
+                      <div
+                        style={{ display: "flex", gap: 3, flexWrap: "wrap" }}
+                      >
+                        {(s.amenities || []).slice(0, 3).map((a) => (
+                          <span key={a} className="amenity-tag">
+                            {a}
+                          </span>
+                        ))}
+                        {(s.amenities || []).length > 3 && (
+                          <span className="amenity-tag">
+                            +{s.amenities.length - 3}
+                          </span>
+                        )}
                       </div>
                     </td>
-                    <td><StatusBadge status={s.status} /></td>
                     <td>
-                      <div style={{ display: 'flex', gap: 5 }}>
-                        {s.status !== 'available' && (
-                          <button className="btn btn-success btn-sm" onClick={() => updateSpaceStatus(s.id, 'available')}>
+                      <StatusBadge status={s.status} />
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", gap: 5 }}>
+                        {s.status !== "available" && (
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => updateSpaceStatus(s.id, "available")}
+                          >
                             <CheckCircle size={12} />
                           </button>
                         )}
-                        {s.status !== 'maintenance' && (
-                          <button className="btn btn-secondary btn-sm" onClick={() => updateSpaceStatus(s.id, 'maintenance')}>
+                        {s.status !== "maintenance" && (
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() =>
+                              updateSpaceStatus(s.id, "maintenance")
+                            }
+                          >
                             <Wrench size={12} />
                           </button>
                         )}
-                        <button className="btn btn-danger btn-sm" onClick={() => deleteSpace(s.id)}>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => deleteSpace(s.id)}
+                        >
                           <Trash2 size={12} />
                         </button>
                       </div>
@@ -273,7 +493,9 @@ export default function SpacesManager() {
         </div>
       )}
 
-      {showModal && <AddSpaceModal onClose={() => setShowModal(false)} onAdd={addSpace} />}
+      {showModal && (
+        <AddSpaceModal onClose={() => setShowModal(false)} onAdd={addSpace} />
+      )}
     </div>
   );
 }
