@@ -145,6 +145,16 @@ export const initialSpaces = [
     floor: 1,
     amenities: ["WiFi"],
   },
+  {
+    id: 13,
+    name: "prova",
+    type: "office",
+    capacity: 2,
+    hourlyRate: 400,
+    status: "available",
+    floor: 2,
+    amenities: ["WiFi", "Stampante"],
+  },
 ];
 
 // Generate past bookings for reports
@@ -435,5 +445,31 @@ export const initialBookings = [
     totalCost: 450,
     status: "confirmed",
     createdAt: genDate(22, 9),
+  },
+  {
+    id: "BK021",
+    spaceId: 7,
+    spaceName: "Prova",
+    spaceType: "office",
+    customerName: "Giulia Rossi",
+    date: genDate(1, 8),
+    startTime: "08:00",
+    endTime: "18:00",
+    hours: 10,
+    totalCost: 4000,
+    status: "confirmed",
+    createdAt: genDate(2, 14),
+
+    resourceId: 13,
+    resourceName: "prova",
+    resourceType: "office",
+    capacity: 2,
+    hourlyRate: 400,
+    resourceStatus: "available",
+    floor: 2,
+    amenities: ["WiFi", "Stampante"],
+
+    priceConsistency: "warning",
+    effectiveHourlyRate: 8,
   },
 ];
