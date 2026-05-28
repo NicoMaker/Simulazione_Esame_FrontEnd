@@ -306,6 +306,7 @@ img {
 .topbar-date {
   font-size: 0.8rem;
   color: var(--text-muted);
+  color: white;
 }
 
 .icon-btn {
