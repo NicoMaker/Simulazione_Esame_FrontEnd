@@ -363,7 +363,7 @@ export const initialBookings = [
     endTime: "18:00",
     hours: 9,
     totalCost: 765,
-    status: "confirmed",
+    status: "cancelled",
     createdAt: genDate(16, 9),
   },
   {
