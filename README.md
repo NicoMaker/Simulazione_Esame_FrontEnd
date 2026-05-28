@@ -49,7 +49,7 @@ npm run build
 
 ## Funzionalità
 
-### 🏠 Panoramica
+### 🏠 Dashboard
 
 - KPI cards: spazi disponibili, prenotazioni attive, fatturato totale, totale spazi
 - Barre di avanzamento occupazione per tipologia
@@ -95,7 +95,7 @@ cowork-dashboard/
 │   ├── index.js                  # Entry point React
 │   └── components/
 │       ├── Layout.js             # Shell: Sidebar + Topbar
-│       ├── DashboardHome.js      # Pagina Panoramica
+│       ├── DashboardHome.js      # Pagina Dashboard
 │       ├── SpacesManager.js      # Gestione Spazi
 │       ├── BookingSystem.js      # Wizard Prenotazione
 │       └── ReportsDashboard.js   # Analytics & Report

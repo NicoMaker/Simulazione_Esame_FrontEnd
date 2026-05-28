@@ -17,7 +17,7 @@ import {
 const NAV_ITEMS = [
   {
     id: "home",
-    label: "Panoramica",
+    label: "Dashboard",
     icon: LayoutDashboard,
     section: "principale",
   },
@@ -42,7 +42,7 @@ const NAV_ITEMS = [
 ];
 
 const PAGE_LABELS = {
-  home: "Panoramica",
+  home: "Dashboard",
   spaces: "Gestione Spazi",
   booking: "Prenotazioni",
   reports: "Reportistica",

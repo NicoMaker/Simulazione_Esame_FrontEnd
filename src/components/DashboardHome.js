@@ -116,7 +116,7 @@ export default function DashboardHome() {
   return (
     <div>
       <div className="page-header">
-        <div className="page-title">Panoramica 👋</div>
+        <div className="page-title">Dashboard 👋</div>
         <div className="page-subtitle">
           Benvenuto nel pannello di controllo CoWork Hub.
         </div>
