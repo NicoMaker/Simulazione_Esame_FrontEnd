@@ -7,7 +7,6 @@ import {
   LayoutGrid,
   List,
   Users,
-  DollarSign,
   Wrench,
   CheckCircle,
   Trash2,
@@ -42,16 +41,23 @@ function TypeBadge({ type }) {
   );
 }
 
-function AddSpaceModal({ onClose, onAdd }) {
-  const [form, setForm] = useState({
-    name: "",
-    type: "desk",
-    capacity: 1,
-    hourlyRate: 10,
-    floor: 1,
-    amenities: "",
-  });
+function SpaceFormModal({ onClose, onSave, initialData, title }) {
+  const [form, setForm] = useState(
+    initialData || {
+      name: "",
+      type: "desk",
+      capacity: 1,
+      hourlyRate: 10,
+      floor: 1,
+      amenities: "",
+    }
+  );
   const [errors, setErrors] = useState({});
+
+  const amenitiesStr =
+    typeof form.amenities === "string"
+      ? form.amenities
+      : (form.amenities || []).join(", ");
 
   const validate = () => {
     const e = {};
@@ -63,15 +69,12 @@ function AddSpaceModal({ onClose, onAdd }) {
 
   const handleSubmit = () => {
     const e = validate();
-    if (Object.keys(e).length) {
-      setErrors(e);
-      return;
-    }
-    const amenitiesArr = form.amenities
+    if (Object.keys(e).length) { setErrors(e); return; }
+    const amenitiesArr = amenitiesStr
       .split(",")
       .map((a) => a.trim())
       .filter(Boolean);
-    onAdd({
+    onSave({
       ...form,
       capacity: Number(form.capacity),
       hourlyRate: Number(form.hourlyRate),
@@ -91,20 +94,12 @@ function AddSpaceModal({ onClose, onAdd }) {
       <div className="modal">
         <div className="modal-header">
           <div>
-            <div className="modal-title">➕ Aggiungi Spazio</div>
-            <div
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--text-muted)",
-                marginTop: 3,
-              }}
-            >
-              Inserisci i dati del nuovo spazio
+            <div className="modal-title">{title}</div>
+            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: 3 }}>
+              {initialData ? "Modifica i dati dello spazio" : "Inserisci i dati del nuovo spazio"}
             </div>
           </div>
-          <button className="modal-close" onClick={onClose}>
-            <X size={16} />
-          </button>
+          <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
           <div className="form-grid">
@@ -150,9 +145,7 @@ function AddSpaceModal({ onClose, onAdd }) {
                 value={form.capacity}
                 onChange={(e) => f("capacity", e.target.value)}
               />
-              {errors.capacity && (
-                <span className="form-error">{errors.capacity}</span>
-              )}
+              {errors.capacity && <span className="form-error">{errors.capacity}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Tariffa Oraria (€) *</label>
@@ -163,46 +156,29 @@ function AddSpaceModal({ onClose, onAdd }) {
                 value={form.hourlyRate}
                 onChange={(e) => f("hourlyRate", e.target.value)}
               />
-              {errors.hourlyRate && (
-                <span className="form-error">{errors.hourlyRate}</span>
-              )}
+              {errors.hourlyRate && <span className="form-error">{errors.hourlyRate}</span>}
             </div>
             <div className="form-group full">
-              <label className="form-label">
-                Dotazioni (separate da virgola)
-              </label>
+              <label className="form-label">Dotazioni (separate da virgola)</label>
               <input
                 className="form-input"
                 placeholder="es. WiFi, Proiettore, Lavagna, VC..."
-                value={form.amenities}
+                value={amenitiesStr}
                 onChange={(e) => f("amenities", e.target.value)}
               />
             </div>
           </div>
           {form.hourlyRate && (
-            <div
-              style={{
-                marginTop: 14,
-                padding: "10px 14px",
-                background: "var(--bg-elevated)",
-                borderRadius: "var(--radius-md)",
-                fontSize: "0.82rem",
-                color: "var(--text-secondary)",
-              }}
-            >
+            <div style={{ marginTop: 14, padding: "10px 14px", background: "var(--bg-elevated)", borderRadius: "var(--radius-md)", fontSize: "0.82rem", color: "var(--text-secondary)" }}>
               💡 Tariffa giornaliera stimata (8h):{" "}
-              <strong style={{ color: "var(--accent)" }}>
-                €{(form.hourlyRate * 8).toFixed(0)}
-              </strong>
+              <strong style={{ color: "var(--accent)" }}>€{(form.hourlyRate * 8).toFixed(0)}</strong>
             </div>
           )}
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
-            Annulla
-          </button>
+          <button className="btn btn-secondary" onClick={onClose}>Annulla</button>
           <button className="btn btn-primary" onClick={handleSubmit}>
-            <Plus size={15} /> Aggiungi Spazio
+            {initialData ? <><Edit3 size={15} /> Salva Modifiche</> : <><Plus size={15} /> Aggiungi Spazio</>}
           </button>
         </div>
       </div>
@@ -210,7 +186,32 @@ function AddSpaceModal({ onClose, onAdd }) {
   );
 }
 
-function SpaceCardGrid({ space, onStatusChange, onDelete }) {
+function ConfirmDeleteModal({ onClose, onConfirm, spaceName }) {
+  return (
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{ maxWidth: 420 }}>
+        <div className="modal-header">
+          <div className="modal-title">🗑️ Elimina Spazio</div>
+          <button className="modal-close" onClick={onClose}><X size={16} /></button>
+        </div>
+        <div className="modal-body">
+          <p style={{ color: "var(--text-secondary)", marginBottom: 0 }}>
+            Sei sicuro di voler eliminare <strong style={{ color: "var(--text-primary)" }}>{spaceName}</strong>?
+            Questa azione è irreversibile.
+          </p>
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-secondary" onClick={onClose}>Annulla</button>
+          <button className="btn btn-danger" onClick={onConfirm}>
+            <Trash2 size={15} /> Elimina
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SpaceCardGrid({ space, onStatusChange, onEdit, onDelete }) {
   const Icon = TYPE_ICONS[space.type] || Building2;
   const color = TYPE_COLORS[space.type];
   return (
@@ -225,18 +226,12 @@ function SpaceCardGrid({ space, onStatusChange, onDelete }) {
         <StatusBadge status={space.status} />
       </div>
       <div className="space-card-meta">
-        <div className="space-meta-item">
-          <Users size={12} /> {space.capacity} pers.
-        </div>
-        <div className="space-meta-item">
-          <Icon size={12} /> {SPACE_TYPE_LABELS[space.type]}
-        </div>
+        <div className="space-meta-item"><Users size={12} /> {space.capacity} pers.</div>
+        <div className="space-meta-item"><Icon size={12} /> {SPACE_TYPE_LABELS[space.type]}</div>
       </div>
       <div className="amenity-tags">
         {(space.amenities || []).slice(0, 4).map((a) => (
-          <span key={a} className="amenity-tag">
-            {a}
-          </span>
+          <span key={a} className="amenity-tag">{a}</span>
         ))}
         {(space.amenities || []).length > 4 && (
           <span className="amenity-tag">+{space.amenities.length - 4}</span>
@@ -247,25 +242,19 @@ function SpaceCardGrid({ space, onStatusChange, onDelete }) {
       </div>
       <div className="space-card-actions">
         {space.status !== "available" && (
-          <button
-            className="btn btn-success btn-sm"
-            onClick={() => onStatusChange(space.id, "available")}
-          >
+          <button className="btn btn-success btn-sm" onClick={() => onStatusChange(space.id, "available")}>
             <CheckCircle size={13} /> Disponibile
           </button>
         )}
         {space.status !== "maintenance" && (
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => onStatusChange(space.id, "maintenance")}
-          >
+          <button className="btn btn-secondary btn-sm" onClick={() => onStatusChange(space.id, "maintenance")}>
             <Wrench size={13} /> Manutenzione
           </button>
         )}
-        <button
-          className="btn btn-danger btn-sm"
-          onClick={() => onDelete(space.id)}
-        >
+        <button className="btn btn-secondary btn-sm" onClick={() => onEdit(space)}>
+          <Edit3 size={13} />
+        </button>
+        <button className="btn btn-danger btn-sm" onClick={() => onDelete(space)}>
           <Trash2 size={13} />
         </button>
       </div>
@@ -274,20 +263,35 @@ function SpaceCardGrid({ space, onStatusChange, onDelete }) {
 }
 
 export default function SpacesManager() {
-  const { spaces, addSpace, updateSpaceStatus, deleteSpace } = useApp();
+  const { spaces, addSpace, updateSpace, updateSpaceStatus, deleteSpace } = useApp();
   const [filter, setFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [view, setView] = useState("grid");
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingSpace, setEditingSpace] = useState(null);
+  const [deletingSpace, setDeletingSpace] = useState(null);
 
   const filtered = spaces.filter((s) => {
     if (filter !== "all" && s.type !== filter) return false;
     if (statusFilter !== "all" && s.status !== statusFilter) return false;
-    if (search && !s.name.toLowerCase().includes(search.toLowerCase()))
-      return false;
+    if (search && !s.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+
+  const handleEdit = (space) => {
+    setEditingSpace({ ...space, amenities: (space.amenities || []).join(", ") });
+  };
+
+  const handleSaveEdit = (data) => {
+    updateSpace(editingSpace.id, { ...data, status: editingSpace.status });
+    setEditingSpace(null);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteSpace(deletingSpace.id);
+    setDeletingSpace(null);
+  };
 
   return (
     <div>
@@ -299,21 +303,12 @@ export default function SpacesManager() {
             {spaces.filter((s) => s.status === "available").length} disponibili
           </div>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
           <Plus size={16} /> Nuovo Spazio
         </button>
       </div>
 
-      {/* Filters */}
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 16 }}>
         <div className="filter-bar" style={{ marginBottom: 0, flex: 1 }}>
           {[
             { id: "all", label: "Tutti" },
@@ -321,32 +316,17 @@ export default function SpacesManager() {
             { id: "meeting", label: "🤝 Sale Riunioni" },
             { id: "office", label: "🏠 Uffici" },
           ].map((f) => (
-            <button
-              key={f.id}
-              className={`filter-chip ${filter === f.id ? "active" : ""}`}
-              onClick={() => setFilter(f.id)}
-            >
+            <button key={f.id} className={`filter-chip ${filter === f.id ? "active" : ""}`} onClick={() => setFilter(f.id)}>
               {f.label}
             </button>
           ))}
-          <div
-            style={{
-              width: 1,
-              height: 20,
-              background: "var(--border)",
-              margin: "0 4px",
-            }}
-          />
+          <div style={{ width: 1, height: 20, background: "var(--border)", margin: "0 4px" }} />
           {[
             { id: "all", label: "Tutti stati" },
             { id: "available", label: "✅ Disponibili" },
             { id: "maintenance", label: "🔧 Manutenzione" },
           ].map((f) => (
-            <button
-              key={f.id}
-              className={`filter-chip ${statusFilter === f.id ? "active" : ""}`}
-              onClick={() => setStatusFilter(f.id)}
-            >
+            <button key={f.id} className={`filter-chip ${statusFilter === f.id ? "active" : ""}`} onClick={() => setStatusFilter(f.id)}>
               {f.label}
             </button>
           ))}
@@ -361,16 +341,10 @@ export default function SpacesManager() {
           />
         </div>
         <div className="view-toggle">
-          <button
-            className={`view-toggle-btn ${view === "grid" ? "active" : ""}`}
-            onClick={() => setView("grid")}
-          >
+          <button className={`view-toggle-btn ${view === "grid" ? "active" : ""}`} onClick={() => setView("grid")}>
             <LayoutGrid size={15} />
           </button>
-          <button
-            className={`view-toggle-btn ${view === "table" ? "active" : ""}`}
-            onClick={() => setView("table")}
-          >
+          <button className={`view-toggle-btn ${view === "table" ? "active" : ""}`} onClick={() => setView("table")}>
             <List size={15} />
           </button>
         </div>
@@ -389,7 +363,8 @@ export default function SpacesManager() {
               key={s.id}
               space={s}
               onStatusChange={updateSpaceStatus}
-              onDelete={deleteSpace}
+              onEdit={handleEdit}
+              onDelete={setDeletingSpace}
             />
           ))}
         </div>
@@ -413,74 +388,37 @@ export default function SpacesManager() {
                 {filtered.map((s) => (
                   <tr key={s.id}>
                     <td>{s.name}</td>
-                    <td>
-                      <TypeBadge type={s.type} />
-                    </td>
+                    <td><TypeBadge type={s.type} /></td>
                     <td>{s.floor}° piano</td>
+                    <td><span style={{ display: "flex", alignItems: "center", gap: 4 }}><Users size={12} />{s.capacity}</span></td>
+                    <td style={{ color: "var(--accent)", fontWeight: 700, fontFamily: "var(--font-display)" }}>€{s.hourlyRate}</td>
                     <td>
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4,
-                        }}
-                      >
-                        <Users size={12} />
-                        {s.capacity}
-                      </span>
-                    </td>
-                    <td
-                      style={{
-                        color: "var(--accent)",
-                        fontWeight: 700,
-                        fontFamily: "var(--font-display)",
-                      }}
-                    >
-                      €{s.hourlyRate}
-                    </td>
-                    <td>
-                      <div
-                        style={{ display: "flex", gap: 3, flexWrap: "wrap" }}
-                      >
+                      <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
                         {(s.amenities || []).slice(0, 3).map((a) => (
-                          <span key={a} className="amenity-tag">
-                            {a}
-                          </span>
+                          <span key={a} className="amenity-tag">{a}</span>
                         ))}
                         {(s.amenities || []).length > 3 && (
-                          <span className="amenity-tag">
-                            +{s.amenities.length - 3}
-                          </span>
+                          <span className="amenity-tag">+{s.amenities.length - 3}</span>
                         )}
                       </div>
                     </td>
-                    <td>
-                      <StatusBadge status={s.status} />
-                    </td>
+                    <td><StatusBadge status={s.status} /></td>
                     <td>
                       <div style={{ display: "flex", gap: 5 }}>
                         {s.status !== "available" && (
-                          <button
-                            className="btn btn-success btn-sm"
-                            onClick={() => updateSpaceStatus(s.id, "available")}
-                          >
+                          <button className="btn btn-success btn-sm" onClick={() => updateSpaceStatus(s.id, "available")}>
                             <CheckCircle size={12} />
                           </button>
                         )}
                         {s.status !== "maintenance" && (
-                          <button
-                            className="btn btn-secondary btn-sm"
-                            onClick={() =>
-                              updateSpaceStatus(s.id, "maintenance")
-                            }
-                          >
+                          <button className="btn btn-secondary btn-sm" onClick={() => updateSpaceStatus(s.id, "maintenance")}>
                             <Wrench size={12} />
                           </button>
                         )}
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => deleteSpace(s.id)}
-                        >
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleEdit(s)}>
+                          <Edit3 size={12} />
+                        </button>
+                        <button className="btn btn-danger btn-sm" onClick={() => setDeletingSpace(s)}>
                           <Trash2 size={12} />
                         </button>
                       </div>
@@ -493,8 +431,29 @@ export default function SpacesManager() {
         </div>
       )}
 
-      {showModal && (
-        <AddSpaceModal onClose={() => setShowModal(false)} onAdd={addSpace} />
+      {showAddModal && (
+        <SpaceFormModal
+          title="➕ Aggiungi Spazio"
+          onClose={() => setShowAddModal(false)}
+          onSave={(data) => { addSpace(data); }}
+        />
+      )}
+
+      {editingSpace && (
+        <SpaceFormModal
+          title="✏️ Modifica Spazio"
+          initialData={editingSpace}
+          onClose={() => setEditingSpace(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
+
+      {deletingSpace && (
+        <ConfirmDeleteModal
+          spaceName={deletingSpace.name}
+          onClose={() => setDeletingSpace(null)}
+          onConfirm={handleConfirmDelete}
+        />
       )}
     </div>
   );

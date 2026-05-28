@@ -23,6 +23,12 @@ export default function App() {
     return newSpace;
   };
 
+  const updateSpace = (id, updatedData) => {
+    setSpaces((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updatedData } : s))
+    );
+  };
+
   const updateSpaceStatus = (id, status) => {
     setSpaces((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)));
   };
@@ -42,10 +48,20 @@ export default function App() {
     return newBooking;
   };
 
+  const updateBooking = (id, updatedData) => {
+    setBookings((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, ...updatedData } : b))
+    );
+  };
+
   const cancelBooking = (id) => {
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)),
+      prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b))
     );
+  };
+
+  const deleteBooking = (id) => {
+    setBookings((prev) => prev.filter((b) => b.id !== id));
   };
 
   const contextValue = {
@@ -53,11 +69,14 @@ export default function App() {
     setCurrentPage,
     spaces,
     addSpace,
+    updateSpace,
     updateSpaceStatus,
     deleteSpace,
     bookings,
     addBooking,
+    updateBooking,
     cancelBooking,
+    deleteBooking,
     sidebarOpen,
     setSidebarOpen,
   };
