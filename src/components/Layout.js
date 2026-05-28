@@ -165,14 +165,7 @@ function Topbar({ onMobileToggle }) {
       </div>
 
       <div className="topbar-actions">
-        <span className="topbar-date">{todayCap}</span>
-        <button className="icon-btn">
-          <Bell size={17} />
-          {newBookings > 0 && <span className="notif-dot" />}
-        </button>
-        <button className="icon-btn">
-          <Settings size={17} />
-        </button>
+        <span className="topbar-date">{todayCap}  </span>
       </div>
     </header>
   );
