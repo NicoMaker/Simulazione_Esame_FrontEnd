@@ -1370,3 +1370,9 @@ tbody td:first-child {
   color: var(--text-secondary) !important;
   font-size: 12px;
 }
+
+@media (min-width: 1100px) {
+  .topbar-toggle {
+    display: none;
+  }
+}
