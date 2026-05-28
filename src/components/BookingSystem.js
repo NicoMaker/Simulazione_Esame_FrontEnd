@@ -50,14 +50,30 @@ function StepsBar({ current }) {
   );
 }
 
-function Step1SelectSpace({ spaces, selected, onSelect, typeFilter, setTypeFilter }) {
+function Step1SelectSpace({
+  spaces,
+  selected,
+  onSelect,
+  typeFilter,
+  setTypeFilter,
+}) {
   const available = spaces.filter((s) => s.status === "available");
-  const filtered = typeFilter === "all" ? available : available.filter((s) => s.type === typeFilter);
+  const filtered =
+    typeFilter === "all"
+      ? available
+      : available.filter((s) => s.type === typeFilter);
 
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.05rem", marginBottom: 4 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            marginBottom: 4,
+          }}
+        >
           Seleziona lo spazio
         </div>
         <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
@@ -71,7 +87,11 @@ function Step1SelectSpace({ spaces, selected, onSelect, typeFilter, setTypeFilte
           { id: "meeting", label: "🤝 Sale Riunioni" },
           { id: "office", label: "🏠 Uffici" },
         ].map((f) => (
-          <button key={f.id} className={`filter-chip ${typeFilter === f.id ? "active" : ""}`} onClick={() => setTypeFilter(f.id)}>
+          <button
+            key={f.id}
+            className={`filter-chip ${typeFilter === f.id ? "active" : ""}`}
+            onClick={() => setTypeFilter(f.id)}
+          >
             {f.label}
           </button>
         ))}
@@ -89,23 +109,51 @@ function Step1SelectSpace({ spaces, selected, onSelect, typeFilter, setTypeFilte
             const color = TYPE_COLORS[space.type];
             const isSelected = selected?.id === space.id;
             return (
-              <div key={space.id} className={`space-select-item ${isSelected ? "selected" : ""}`} onClick={() => onSelect(space)}>
-                <div className="space-select-icon" style={{ background: `${color}1a` }}>
+              <div
+                key={space.id}
+                className={`space-select-item ${isSelected ? "selected" : ""}`}
+                onClick={() => onSelect(space)}
+              >
+                <div
+                  className="space-select-icon"
+                  style={{ background: `${color}1a` }}
+                >
                   <Icon size={18} style={{ color }} />
                 </div>
                 <div className="space-select-info">
                   <div className="space-select-name">{space.name}</div>
                   <div className="space-select-sub">
-                    {SPACE_TYPE_LABELS[space.type]} · Piano {space.floor} · {space.capacity} pers. ·{" "}
+                    {SPACE_TYPE_LABELS[space.type]} · Piano {space.floor} ·{" "}
+                    {space.capacity} pers. ·{" "}
                     {(space.amenities || []).slice(0, 3).join(", ")}
                   </div>
                 </div>
                 <div className="space-select-rate">
                   €{space.hourlyRate}
-                  <span style={{ fontSize: "0.7rem", fontFamily: "var(--font-body)", fontWeight: 400, color: "var(--text-muted)" }}>/h</span>
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 400,
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    /h
+                  </span>
                 </div>
                 {isSelected && (
-                  <div style={{ width: 24, height: 24, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: "50%",
+                      background: color,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
                     <Check size={13} color="white" />
                   </div>
                 )}
@@ -125,11 +173,20 @@ function Step2BookingForm({ form, setForm, errors, space }) {
   return (
     <div>
       <div style={{ marginBottom: 18 }}>
-        <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.05rem", marginBottom: 4 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            marginBottom: 4,
+          }}
+        >
           Dati Prenotazione
         </div>
         <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
-          Spazio selezionato: <strong style={{ color: "var(--accent)" }}>{space?.name}</strong> · €{space?.hourlyRate}/h
+          Spazio selezionato:{" "}
+          <strong style={{ color: "var(--accent)" }}>{space?.name}</strong> · €
+          {space?.hourlyRate}/h
         </div>
       </div>
       <div className="form-grid">
@@ -141,7 +198,9 @@ function Step2BookingForm({ form, setForm, errors, space }) {
             value={form.customerName}
             onChange={(e) => f("customerName", e.target.value)}
           />
-          {errors.customerName && <span className="form-error">{errors.customerName}</span>}
+          {errors.customerName && (
+            <span className="form-error">{errors.customerName}</span>
+          )}
         </div>
         <div className="form-group full">
           <label className="form-label">Data Prenotazione *</label>
@@ -156,13 +215,27 @@ function Step2BookingForm({ form, setForm, errors, space }) {
         </div>
         <div className="form-group">
           <label className="form-label">Ora Inizio *</label>
-          <input type="time" className={`form-input ${errors.startTime ? "error" : ""}`} value={form.startTime} onChange={(e) => f("startTime", e.target.value)} />
-          {errors.startTime && <span className="form-error">{errors.startTime}</span>}
+          <input
+            type="time"
+            className={`form-input ${errors.startTime ? "error" : ""}`}
+            value={form.startTime}
+            onChange={(e) => f("startTime", e.target.value)}
+          />
+          {errors.startTime && (
+            <span className="form-error">{errors.startTime}</span>
+          )}
         </div>
         <div className="form-group">
           <label className="form-label">Ora Fine *</label>
-          <input type="time" className={`form-input ${errors.endTime ? "error" : ""}`} value={form.endTime} onChange={(e) => f("endTime", e.target.value)} />
-          {errors.endTime && <span className="form-error">{errors.endTime}</span>}
+          <input
+            type="time"
+            className={`form-input ${errors.endTime ? "error" : ""}`}
+            value={form.endTime}
+            onChange={(e) => f("endTime", e.target.value)}
+          />
+          {errors.endTime && (
+            <span className="form-error">{errors.endTime}</span>
+          )}
         </div>
         <div className="form-group full">
           <label className="form-label">Note aggiuntive</label>
@@ -176,20 +249,46 @@ function Step2BookingForm({ form, setForm, errors, space }) {
           />
         </div>
       </div>
-      {form.startTime && form.endTime && space && (() => {
-        const [sh, sm] = form.startTime.split(":").map(Number);
-        const [eh, em] = form.endTime.split(":").map(Number);
-        const hours = (eh * 60 + em - sh * 60 - sm) / 60;
-        if (hours > 0) {
-          return (
-            <div style={{ padding: "12px 16px", background: "var(--accent-dim)", borderRadius: "var(--radius-md)", fontSize: "0.85rem", color: "var(--accent)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>⏱ Durata: <strong>{hours}h</strong></span>
-              <span>Costo stimato: <strong style={{ fontFamily: "var(--font-display)", fontSize: "1rem" }}>€{(hours * space.hourlyRate).toFixed(2)}</strong></span>
-            </div>
-          );
-        }
-        return null;
-      })()}
+      {form.startTime &&
+        form.endTime &&
+        space &&
+        (() => {
+          const [sh, sm] = form.startTime.split(":").map(Number);
+          const [eh, em] = form.endTime.split(":").map(Number);
+          const hours = (eh * 60 + em - sh * 60 - sm) / 60;
+          if (hours > 0) {
+            return (
+              <div
+                style={{
+                  padding: "12px 16px",
+                  background: "var(--accent-dim)",
+                  borderRadius: "var(--radius-md)",
+                  fontSize: "0.85rem",
+                  color: "var(--accent)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span>
+                  ⏱ Durata: <strong>{hours}h</strong>
+                </span>
+                <span>
+                  Costo stimato:{" "}
+                  <strong
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    €{(hours * space.hourlyRate).toFixed(2)}
+                  </strong>
+                </span>
+              </div>
+            );
+          }
+          return null;
+        })()}
     </div>
   );
 }
@@ -199,36 +298,78 @@ function Step3Confirm({ space, form }) {
   const [eh, em] = form.endTime.split(":").map(Number);
   const hours = (eh * 60 + em - sh * 60 - sm) / 60;
   const total = (hours * space.hourlyRate).toFixed(2);
-  const dateFormatted = new Date(form.date).toLocaleDateString("it-IT", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const dateFormatted = new Date(form.date).toLocaleDateString("it-IT", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   const Icon = TYPE_ICONS[space.type] || Building2;
 
   return (
     <div>
       <div style={{ marginBottom: 18 }}>
-        <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.05rem", marginBottom: 4 }}>Riepilogo Prenotazione</div>
-        <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>Verifica i dettagli prima di confermare</div>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            marginBottom: 4,
+          }}
+        >
+          Riepilogo Prenotazione
+        </div>
+        <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
+          Verifica i dettagli prima di confermare
+        </div>
       </div>
       <div className="confirm-card">
         <div className="confirm-header">
-          <div className="confirm-icon"><Icon size={22} /></div>
+          <div className="confirm-icon">
+            <Icon size={22} />
+          </div>
           <div>
             <div className="confirm-space-name">{space.name}</div>
-            <div className="confirm-space-type">{SPACE_TYPE_LABELS[space.type]} · Piano {space.floor}</div>
+            <div className="confirm-space-type">
+              {SPACE_TYPE_LABELS[space.type]} · Piano {space.floor}
+            </div>
           </div>
-          <span className={`badge badge-${space.type}`} style={{ marginLeft: "auto" }}>{SPACE_TYPE_LABELS[space.type]}</span>
+          <span
+            className={`badge badge-${space.type}`}
+            style={{ marginLeft: "auto" }}
+          >
+            {SPACE_TYPE_LABELS[space.type]}
+          </span>
         </div>
         <div className="confirm-detail-list">
           <div className="confirm-detail-row">
-            <div className="confirm-detail-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><User size={14} /> Cliente</div>
+            <div
+              className="confirm-detail-label"
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <User size={14} /> Cliente
+            </div>
             <div className="confirm-detail-value">{form.customerName}</div>
           </div>
           <div className="confirm-detail-row">
-            <div className="confirm-detail-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><Calendar size={14} /> Data</div>
+            <div
+              className="confirm-detail-label"
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <Calendar size={14} /> Data
+            </div>
             <div className="confirm-detail-value">{dateFormatted}</div>
           </div>
           <div className="confirm-detail-row">
-            <div className="confirm-detail-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><Clock size={14} /> Fascia Oraria</div>
-            <div className="confirm-detail-value">{form.startTime} – {form.endTime} ({hours}h)</div>
+            <div
+              className="confirm-detail-label"
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <Clock size={14} /> Fascia Oraria
+            </div>
+            <div className="confirm-detail-value">
+              {form.startTime} – {form.endTime} ({hours}h)
+            </div>
           </div>
           <div className="confirm-detail-row">
             <div className="confirm-detail-label">Tariffa oraria</div>
@@ -237,7 +378,16 @@ function Step3Confirm({ space, form }) {
           {form.notes && (
             <div className="confirm-detail-row">
               <div className="confirm-detail-label">Note</div>
-              <div className="confirm-detail-value" style={{ textAlign: "right", maxWidth: "60%", fontSize: "0.82rem" }}>{form.notes}</div>
+              <div
+                className="confirm-detail-value"
+                style={{
+                  textAlign: "right",
+                  maxWidth: "60%",
+                  fontSize: "0.82rem",
+                }}
+              >
+                {form.notes}
+              </div>
             </div>
           )}
           <div className="confirm-detail-row confirm-total">
@@ -246,8 +396,15 @@ function Step3Confirm({ space, form }) {
           </div>
         </div>
       </div>
-      <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", textAlign: "center" }}>
-        La prenotazione sarà confermata immediatamente. Il cliente riceverà una notifica.
+      <div
+        style={{
+          fontSize: "0.78rem",
+          color: "var(--text-muted)",
+          textAlign: "center",
+        }}
+      >
+        La prenotazione sarà confermata immediatamente. Il cliente riceverà una
+        notifica.
       </div>
     </div>
   );
@@ -271,9 +428,11 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
   const f = (key, val) => setForm((p) => ({ ...p, [key]: val }));
 
   const availableSpaces = spaces.filter(
-    (s) => s.status === "available" || s.id === booking.spaceId
+    (s) => s.status === "available" || s.id === booking.spaceId,
   );
-  const selectedSpace = spaces.find((s) => s.id === Number(form.spaceId)) || spaces.find((s) => s.id === booking.spaceId);
+  const selectedSpace =
+    spaces.find((s) => s.id === Number(form.spaceId)) ||
+    spaces.find((s) => s.id === booking.spaceId);
 
   const validate = () => {
     const e = {};
@@ -284,14 +443,18 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
     if (form.startTime && form.endTime) {
       const [sh, sm] = form.startTime.split(":").map(Number);
       const [eh, em] = form.endTime.split(":").map(Number);
-      if (eh * 60 + em <= sh * 60 + sm) e.endTime = "L'ora di fine deve essere dopo l'inizio";
+      if (eh * 60 + em <= sh * 60 + sm)
+        e.endTime = "L'ora di fine deve essere dopo l'inizio";
     }
     return e;
   };
 
   const handleSubmit = () => {
     const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
+    if (Object.keys(e).length) {
+      setErrors(e);
+      return;
+    }
     const [sh, sm] = form.startTime.split(":").map(Number);
     const [eh, em] = form.endTime.split(":").map(Number);
     const hours = (eh * 60 + em - sh * 60 - sm) / 60;
@@ -316,20 +479,34 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
       const [sh, sm] = form.startTime.split(":").map(Number);
       const [eh, em] = form.endTime.split(":").map(Number);
       const h = (eh * 60 + em - sh * 60 - sm) / 60;
-      if (h > 0) return { hours: h, cost: (h * selectedSpace.hourlyRate).toFixed(2) };
+      if (h > 0)
+        return { hours: h, cost: (h * selectedSpace.hourlyRate).toFixed(2) };
     }
     return null;
   })();
 
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className="modal-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal" style={{ maxWidth: 540 }}>
         <div className="modal-header">
           <div>
             <div className="modal-title">✏️ Modifica Prenotazione</div>
-            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: 3 }}>ID: {booking.id}</div>
+            <div
+              style={{
+                fontSize: "0.8rem",
+                color: "var(--text-muted)",
+                marginTop: 3,
+              }}
+            >
+              ID: {booking.id}
+            </div>
           </div>
-          <button className="modal-close" onClick={onClose}><X size={16} /></button>
+          <button className="modal-close" onClick={onClose}>
+            <X size={16} />
+          </button>
         </div>
         <div className="modal-body">
           <div className="form-grid">
@@ -354,7 +531,9 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
                 value={form.customerName}
                 onChange={(e) => f("customerName", e.target.value)}
               />
-              {errors.customerName && <span className="form-error">{errors.customerName}</span>}
+              {errors.customerName && (
+                <span className="form-error">{errors.customerName}</span>
+              )}
             </div>
             <div className="form-group full">
               <label className="form-label">Data *</label>
@@ -369,13 +548,27 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
             </div>
             <div className="form-group">
               <label className="form-label">Ora Inizio *</label>
-              <input type="time" className={`form-input ${errors.startTime ? "error" : ""}`} value={form.startTime} onChange={(e) => f("startTime", e.target.value)} />
-              {errors.startTime && <span className="form-error">{errors.startTime}</span>}
+              <input
+                type="time"
+                className={`form-input ${errors.startTime ? "error" : ""}`}
+                value={form.startTime}
+                onChange={(e) => f("startTime", e.target.value)}
+              />
+              {errors.startTime && (
+                <span className="form-error">{errors.startTime}</span>
+              )}
             </div>
             <div className="form-group">
               <label className="form-label">Ora Fine *</label>
-              <input type="time" className={`form-input ${errors.endTime ? "error" : ""}`} value={form.endTime} onChange={(e) => f("endTime", e.target.value)} />
-              {errors.endTime && <span className="form-error">{errors.endTime}</span>}
+              <input
+                type="time"
+                className={`form-input ${errors.endTime ? "error" : ""}`}
+                value={form.endTime}
+                onChange={(e) => f("endTime", e.target.value)}
+              />
+              {errors.endTime && (
+                <span className="form-error">{errors.endTime}</span>
+              )}
             </div>
             <div className="form-group full">
               <label className="form-label">Note</label>
@@ -389,14 +582,40 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
             </div>
           </div>
           {costPreview && (
-            <div style={{ padding: "12px 16px", background: "var(--accent-dim)", borderRadius: "var(--radius-md)", fontSize: "0.85rem", color: "var(--accent)", display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-              <span>⏱ Durata: <strong>{costPreview.hours}h</strong></span>
-              <span>Costo: <strong style={{ fontFamily: "var(--font-display)", fontSize: "1rem" }}>€{costPreview.cost}</strong></span>
+            <div
+              style={{
+                padding: "12px 16px",
+                background: "var(--accent-dim)",
+                borderRadius: "var(--radius-md)",
+                fontSize: "0.85rem",
+                color: "var(--accent)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 8,
+              }}
+            >
+              <span>
+                ⏱ Durata: <strong>{costPreview.hours}h</strong>
+              </span>
+              <span>
+                Costo:{" "}
+                <strong
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1rem",
+                  }}
+                >
+                  €{costPreview.cost}
+                </strong>
+              </span>
             </div>
           )}
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Annulla</button>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Annulla
+          </button>
           <button className="btn btn-primary" onClick={handleSubmit}>
             <Edit3 size={15} /> Salva Modifiche
           </button>
@@ -409,20 +628,34 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
 // ─── CONFIRM DELETE MODAL ──────────────────────────────────────────────────
 function ConfirmDeleteBookingModal({ booking, onClose, onConfirm }) {
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className="modal-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal" style={{ maxWidth: 420 }}>
         <div className="modal-header">
           <div className="modal-title">🗑️ Elimina Prenotazione</div>
-          <button className="modal-close" onClick={onClose}><X size={16} /></button>
+          <button className="modal-close" onClick={onClose}>
+            <X size={16} />
+          </button>
         </div>
         <div className="modal-body">
           <p style={{ color: "var(--text-secondary)", marginBottom: 0 }}>
-            Sei sicuro di voler eliminare la prenotazione <strong style={{ color: "var(--text-primary)" }}>{booking.id}</strong> di <strong style={{ color: "var(--text-primary)" }}>{booking.customerName}</strong>?
-            Questa azione è irreversibile.
+            Sei sicuro di voler eliminare la prenotazione{" "}
+            <strong style={{ color: "var(--text-primary)" }}>
+              {booking.id}
+            </strong>{" "}
+            di{" "}
+            <strong style={{ color: "var(--text-primary)" }}>
+              {booking.customerName}
+            </strong>
+            ? Questa azione è irreversibile.
           </p>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Annulla</button>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Annulla
+          </button>
           <button className="btn btn-danger" onClick={onConfirm}>
             <Trash2 size={15} /> Elimina
           </button>
@@ -440,21 +673,38 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
   const filtered = bookings
     .filter((b) => {
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
-      if (search && !b.customerName.toLowerCase().includes(search.toLowerCase()) && !b.spaceName.toLowerCase().includes(search.toLowerCase())) return false;
+      if (
+        search &&
+        !b.customerName.toLowerCase().includes(search.toLowerCase()) &&
+        !b.spaceName.toLowerCase().includes(search.toLowerCase())
+      )
+        return false;
       return true;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 14,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         <div className="filter-bar" style={{ marginBottom: 0 }}>
           {[
             { id: "all", label: "Tutte" },
             { id: "confirmed", label: "✅ Confermate" },
             { id: "cancelled", label: "❌ Cancellate" },
           ].map((f) => (
-            <button key={f.id} className={`filter-chip ${statusFilter === f.id ? "active" : ""}`} onClick={() => setStatusFilter(f.id)}>
+            <button
+              key={f.id}
+              className={`filter-chip ${statusFilter === f.id ? "active" : ""}`}
+              onClick={() => setStatusFilter(f.id)}
+            >
               {f.label}
             </button>
           ))}
@@ -464,7 +714,15 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
           placeholder="Cerca cliente o spazio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ maxWidth: 200, padding: "6px 12px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-elevated)", color: "var(--text-primary)", fontSize: "0.82rem" }}
+          style={{
+            maxWidth: 200,
+            padding: "6px 12px",
+            borderRadius: "var(--radius-md)",
+            border: "1px solid var(--border)",
+            background: "var(--bg-elevated)",
+            color: "var(--text-primary)",
+            fontSize: "0.82rem",
+          }}
         />
       </div>
 
@@ -491,23 +749,66 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
               </thead>
               <tbody>
                 {filtered.map((b) => {
-                  const dateStr = new Date(b.date).toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" });
+                  const dateStr = new Date(b.date).toLocaleDateString("it-IT", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  });
                   const isCancelled = b.status === "cancelled";
                   return (
                     <tr key={b.id} style={{ opacity: isCancelled ? 0.6 : 1 }}>
-                      <td style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--accent)" }}>{b.id}</td>
+                      <td
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontWeight: 700,
+                          color: "var(--accent)",
+                        }}
+                      >
+                        {b.id}
+                      </td>
                       <td style={{ fontWeight: 600 }}>{b.customerName}</td>
                       <td>
-                        <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: TYPE_COLORS[b.spaceType], flexShrink: 0 }} />
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 5,
+                          }}
+                        >
+                          <span
+                            style={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: "50%",
+                              background: TYPE_COLORS[b.spaceType],
+                              flexShrink: 0,
+                            }}
+                          />
                           {b.spaceName}
                         </span>
                       </td>
                       <td style={{ fontSize: "0.82rem" }}>{dateStr}</td>
-                      <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{b.startTime}–{b.endTime}</td>
-                      <td style={{ fontWeight: 700, fontFamily: "var(--font-display)", color: "var(--emerald)" }}>€{b.totalCost}</td>
+                      <td
+                        style={{
+                          fontSize: "0.82rem",
+                          color: "var(--text-secondary)",
+                        }}
+                      >
+                        {b.startTime}–{b.endTime}
+                      </td>
+                      <td
+                        style={{
+                          fontWeight: 700,
+                          fontFamily: "var(--font-display)",
+                          color: "var(--emerald)",
+                        }}
+                      >
+                        €{b.totalCost}
+                      </td>
                       <td>
-                        <span className={`badge badge-${isCancelled ? "maintenance" : "available"}`}>
+                        <span
+                          className={`badge badge-${isCancelled ? "maintenance" : "available"}`}
+                        >
                           <span className="badge-dot" />
                           {isCancelled ? "Cancellata" : "Confermata"}
                         </span>
@@ -515,16 +816,28 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
                       <td>
                         <div style={{ display: "flex", gap: 5 }}>
                           {!isCancelled && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => onEdit(b)} title="Modifica">
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => onEdit(b)}
+                              title="Modifica"
+                            >
                               <Edit3 size={12} />
                             </button>
                           )}
                           {!isCancelled && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => onCancel(b.id)} title="Cancella">
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => onCancel(b.id)}
+                              title="Cancella"
+                            >
                               <X size={12} />
                             </button>
                           )}
-                          <button className="btn btn-danger btn-sm" onClick={() => onDelete(b)} title="Elimina">
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => onDelete(b)}
+                            title="Elimina"
+                          >
                             <Trash2 size={12} />
                           </button>
                         </div>
@@ -543,11 +856,24 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
 
 // ─── MAIN COMPONENT ────────────────────────────────────────────────────────
 export default function BookingSystem() {
-  const { spaces, addBooking, updateBooking, cancelBooking, deleteBooking, bookings } = useApp();
+  const {
+    spaces,
+    addBooking,
+    updateBooking,
+    cancelBooking,
+    deleteBooking,
+    bookings,
+  } = useApp();
   const [step, setStep] = useState(0);
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedSpace, setSelectedSpace] = useState(null);
-  const [form, setForm] = useState({ customerName: "", date: "", startTime: "", endTime: "", notes: "" });
+  const [form, setForm] = useState({
+    customerName: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    notes: "",
+  });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(null);
   const [activeTab, setActiveTab] = useState("new"); // "new" | "list"
@@ -566,7 +892,8 @@ export default function BookingSystem() {
     if (form.startTime && form.endTime) {
       const [sh, sm] = form.startTime.split(":").map(Number);
       const [eh, em] = form.endTime.split(":").map(Number);
-      if (eh * 60 + em <= sh * 60 + sm) e.endTime = "L'ora di fine deve essere dopo l'inizio";
+      if (eh * 60 + em <= sh * 60 + sm)
+        e.endTime = "L'ora di fine deve essere dopo l'inizio";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -594,7 +921,13 @@ export default function BookingSystem() {
       setSuccess(newBooking);
       setStep(0);
       setSelectedSpace(null);
-      setForm({ customerName: "", date: "", startTime: "", endTime: "", notes: "" });
+      setForm({
+        customerName: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        notes: "",
+      });
       return;
     }
     setStep((s) => s + 1);
@@ -608,35 +941,72 @@ export default function BookingSystem() {
     <div>
       <div className="page-header">
         <div className="page-title">Sistema di Prenotazione</div>
-        <div className="page-subtitle">Prenota scrivanie, sale riunioni e uffici privati</div>
+        <div className="page-subtitle">
+          Prenota scrivanie, sale riunioni e uffici privati
+        </div>
       </div>
 
       {success && (
         <div className="success-banner">
           <CheckCircle size={20} className="success-banner-icon" />
           <div>
-            <div className="success-banner-text">✅ Prenotazione {success.id} confermata con successo!</div>
-            <div style={{ fontSize: "0.78rem", color: "var(--emerald)", opacity: 0.8, marginTop: 2 }}>
-              {success.customerName} · {success.spaceName} · €{success.totalCost}
+            <div className="success-banner-text">
+              ✅ Prenotazione {success.id} confermata con successo!
+            </div>
+            <div
+              style={{
+                fontSize: "0.78rem",
+                color: "var(--emerald)",
+                opacity: 0.8,
+                marginTop: 2,
+              }}
+            >
+              {success.customerName} · {success.spaceName} · €
+              {success.totalCost}
             </div>
           </div>
-          <button onClick={() => setSuccess(null)} style={{ marginLeft: "auto", color: "var(--emerald)", cursor: "pointer", background: "none", border: "none", padding: 4 }}>✕</button>
+          <button
+            onClick={() => setSuccess(null)}
+            style={{
+              marginLeft: "auto",
+              color: "var(--emerald)",
+              cursor: "pointer",
+              background: "none",
+              border: "none",
+              padding: 4,
+            }}
+          >
+            ✕
+          </button>
         </div>
       )}
 
       {/* Tab switcher */}
       <div className="filter-bar" style={{ marginBottom: 20 }}>
-        <button className={`filter-chip ${activeTab === "new" ? "active" : ""}`} onClick={() => setActiveTab("new")}>
+        <button
+          className={`filter-chip ${activeTab === "new" ? "active" : ""}`}
+          onClick={() => setActiveTab("new")}
+        >
           📅 Nuova Prenotazione
         </button>
-        <button className={`filter-chip ${activeTab === "list" ? "active" : ""}`} onClick={() => setActiveTab("list")}>
+        <button
+          className={`filter-chip ${activeTab === "list" ? "active" : ""}`}
+          onClick={() => setActiveTab("list")}
+        >
           <List size={13} style={{ display: "inline", marginRight: 4 }} />
           Gestisci Prenotazioni ({bookings.length})
         </button>
       </div>
 
       {activeTab === "new" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24, alignItems: "start" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 340px",
+            gap: 24,
+            alignItems: "start",
+          }}
+        >
           {/* Wizard */}
           <div className="card">
             <div className="card-header">
@@ -644,39 +1014,142 @@ export default function BookingSystem() {
             </div>
             <div className="card-body">
               <StepsBar current={step} />
-              {step === 0 && <Step1SelectSpace spaces={spaces} selected={selectedSpace} onSelect={setSelectedSpace} typeFilter={typeFilter} setTypeFilter={setTypeFilter} />}
-              {step === 1 && <Step2BookingForm form={form} setForm={setForm} errors={errors} space={selectedSpace} />}
+              {step === 0 && (
+                <Step1SelectSpace
+                  spaces={spaces}
+                  selected={selectedSpace}
+                  onSelect={setSelectedSpace}
+                  typeFilter={typeFilter}
+                  setTypeFilter={setTypeFilter}
+                />
+              )}
+              {step === 1 && (
+                <Step2BookingForm
+                  form={form}
+                  setForm={setForm}
+                  errors={errors}
+                  space={selectedSpace}
+                />
+              )}
               {step === 2 && <Step3Confirm space={selectedSpace} form={form} />}
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
-                <button className="btn btn-secondary" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: 24,
+                }}
+              >
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setStep((s) => Math.max(0, s - 1))}
+                  disabled={step === 0}
+                >
                   <ArrowLeft size={15} /> Indietro
                 </button>
-                <button className="btn btn-primary" onClick={handleNext} disabled={step === 0 && !selectedSpace}>
-                  {step === 2 ? <><CheckCircle size={15} /> Conferma Prenotazione</> : <>Avanti <ArrowRight size={15} /></>}
+                <button
+                  className="btn btn-primary"
+                  onClick={handleNext}
+                  disabled={step === 0 && !selectedSpace}
+                >
+                  {step === 2 ? (
+                    <>
+                      <CheckCircle size={15} /> Conferma Prenotazione
+                    </>
+                  ) : (
+                    <>
+                      Avanti <ArrowRight size={15} />
+                    </>
+                  )}
                 </button>
               </div>
             </div>
           </div>
 
           {/* Recent Bookings sidebar */}
-          <div className="card" style={{ position: "sticky", top: "calc(var(--topbar-h) + 28px)" }}>
+          <div
+            className="card"
+            style={{ position: "sticky", top: "calc(var(--topbar-h) + 28px)" }}
+          >
             <div className="card-header">
               <div className="card-title">🕐 Prenotazioni Recenti</div>
             </div>
             <div style={{ padding: "8px 0" }}>
               {recentBookings.map((b) => {
-                const date = new Date(b.date).toLocaleDateString("it-IT", { day: "2-digit", month: "short" });
+                const date = new Date(b.date).toLocaleDateString("it-IT", {
+                  day: "2-digit",
+                  month: "short",
+                });
                 return (
-                  <div key={b.id} style={{ padding: "10px 18px", borderBottom: "1px solid var(--border)", display: "flex", gap: 10, alignItems: "flex-start" }}>
-                    <div style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, background: TYPE_COLORS[b.spaceType] + "1a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontWeight: 800, color: TYPE_COLORS[b.spaceType], fontFamily: "var(--font-display)" }}>
+                  <div
+                    key={b.id}
+                    style={{
+                      padding: "10px 18px",
+                      borderBottom: "1px solid var(--border)",
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: 8,
+                        flexShrink: 0,
+                        background: TYPE_COLORS[b.spaceType] + "1a",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        fontWeight: 800,
+                        color: TYPE_COLORS[b.spaceType],
+                        fontFamily: "var(--font-display)",
+                      }}
+                    >
                       {b.id.replace("BK", "")}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 600, fontSize: "0.82rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{b.customerName}</div>
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: 1 }}>{b.spaceName} · {date}</div>
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: 1 }}>{b.startTime}–{b.endTime}</div>
+                      <div
+                        style={{
+                          fontWeight: 600,
+                          fontSize: "0.82rem",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {b.customerName}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "0.75rem",
+                          color: "var(--text-muted)",
+                          marginTop: 1,
+                        }}
+                      >
+                        {b.spaceName} · {date}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "0.75rem",
+                          color: "var(--text-secondary)",
+                          marginTop: 1,
+                        }}
+                      >
+                        {b.startTime}–{b.endTime}
+                      </div>
                     </div>
-                    <div style={{ color: "var(--emerald)", fontWeight: 800, fontFamily: "var(--font-display)", fontSize: "0.85rem", flexShrink: 0 }}>€{b.totalCost}</div>
+                    <div
+                      style={{
+                        color: "var(--emerald)",
+                        fontWeight: 800,
+                        fontFamily: "var(--font-display)",
+                        fontSize: "0.85rem",
+                        flexShrink: 0,
+                      }}
+                    >
+                      €{b.totalCost}
+                    </div>
                   </div>
                 );
               })}
@@ -700,7 +1173,9 @@ export default function BookingSystem() {
           booking={editingBooking}
           spaces={spaces}
           onClose={() => setEditingBooking(null)}
-          onSave={(id, data) => { updateBooking(id, data); }}
+          onSave={(id, data) => {
+            updateBooking(id, data);
+          }}
         />
       )}
 
@@ -708,7 +1183,10 @@ export default function BookingSystem() {
         <ConfirmDeleteBookingModal
           booking={deletingBooking}
           onClose={() => setDeletingBooking(null)}
-          onConfirm={() => { deleteBooking(deletingBooking.id); setDeletingBooking(null); }}
+          onConfirm={() => {
+            deleteBooking(deletingBooking.id);
+            setDeletingBooking(null);
+          }}
         />
       )}
     </div>

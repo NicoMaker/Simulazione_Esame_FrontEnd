@@ -165,7 +165,7 @@ function Topbar({ onMobileToggle }) {
       </div>
 
       <div className="topbar-actions">
-        <span className="topbar-date">{todayCap}  </span>
+        <span className="topbar-date">{todayCap} </span>
       </div>
     </header>
   );

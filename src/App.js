@@ -25,7 +25,7 @@ export default function App() {
 
   const updateSpace = (id, updatedData) => {
     setSpaces((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...updatedData } : s))
+      prev.map((s) => (s.id === id ? { ...s, ...updatedData } : s)),
     );
   };
 
@@ -50,13 +50,13 @@ export default function App() {
 
   const updateBooking = (id, updatedData) => {
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, ...updatedData } : b))
+      prev.map((b) => (b.id === id ? { ...b, ...updatedData } : b)),
     );
   };
 
   const cancelBooking = (id) => {
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b))
+      prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)),
     );
   };
 
