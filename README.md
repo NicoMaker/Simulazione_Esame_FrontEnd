@@ -25,8 +25,8 @@ Installa **Node.js LTS** da [nodejs.org](https://nodejs.org) se non lo hai già.
 ### 2. Installa le dipendenze
 
 ```bash
-cd cowork-dashboard
 npm install
+npm i
 ```
 
 > Attendi il completamento (circa 1–2 minuti, scarica ~1400 pacchetti)
