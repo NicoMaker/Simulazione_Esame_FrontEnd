@@ -34,7 +34,7 @@ npm i
 ### 3. Avvia l'applicazione
 
 ```bash
-npm start
+npm run start
 ```
 
 > Si apre automaticamente il browser su **http://localhost:3000**
