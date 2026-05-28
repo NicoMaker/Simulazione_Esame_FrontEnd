@@ -1,0 +1,18 @@
+sviluppare una dashbard per la gestione di uno spazio co-working (scrivanie dedicate, sale riunioni, uffici privati)
+devono essere implementate funzionalità front-end per la gestione delle prenotazioni e delle risorse, un sistema di prenotazione degli spazi da parte dei clienti 
+e una sezione di reportistica interativa per gli amministratori.
+
+la soluzione deve essere caratterizata da un'attenzione alla ui e ux, con un design professioanle e pulito e responsive. 
+
+e' consentito uso hardcoded per backend.
+
+preparazione componenti wrapper (layout, sidebar,navbar)
+
+gestione risorse con mplementazione vista (tabella o griglia) degli spazi disponibili con opzioi per modificare lo stato (manutenzione,disponibile)
+form di inserimento di una nuova risorsa con validazione dei dati(nome sala/postazione, capienza, tariffa oraria); implemntare funzionalità filtro tipologia
+
+sistema di prenotazione con funzioni: selezione della risorsa desiderata, form di prenotazione con campi validi (nome cliente, data, fascia oraria di inzio e di fine),
+schermata di conferma con riepilogo preotazione e calcolo automatico della tariffa stimata.
+
+dashboard reportisitca con elenco cronologico delle prenotazioni effettuat, grafici (torta, barre e linee) per la rappresentazione visiva,
+delle tipologie di spazi più richiesti (sale riunioni e scrivanie), del tasso di occupazione medio della struttura, dell'andamneto dei guadagni o del volume di prenotazioni nel tempo
