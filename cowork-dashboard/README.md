@@ -6,35 +6,41 @@ Dashboard professionale per la gestione di spazi co-working.
 
 ## Stack Tecnologico
 
-| Libreria | Scopo |
-|---|---|
-| **React 18** | Framework UI |
-| **Recharts** | Grafici interattivi (torta, barre, linee) |
-| **Lucide React** | Icone |
-| **CSS Custom** | Design system con variabili CSS (no framework esterno) |
-| **Google Fonts** | Syne (display) + DM Sans (body) |
+| Libreria         | Scopo                                                  |
+| ---------------- | ------------------------------------------------------ |
+| **React 18**     | Framework UI                                           |
+| **Recharts**     | Grafici interattivi (torta, barre, linee)              |
+| **Lucide React** | Icone                                                  |
+| **CSS Custom**   | Design system con variabili CSS (no framework esterno) |
+| **Google Fonts** | Syne (display) + DM Sans (body)                        |
 
 ---
 
 ## ⚡ Avvio Rapido
 
 ### 1. Prerequisiti
+
 Installa **Node.js LTS** da [nodejs.org](https://nodejs.org) se non lo hai già.
 
 ### 2. Installa le dipendenze
+
 ```bash
 cd cowork-dashboard
 npm install
 ```
+
 > Attendi il completamento (circa 1–2 minuti, scarica ~1400 pacchetti)
 
 ### 3. Avvia l'applicazione
+
 ```bash
 npm start
 ```
+
 > Si apre automaticamente il browser su **http://localhost:3000**
 
 ### 4. Build per produzione (opzionale)
+
 ```bash
 npm run build
 ```
@@ -44,12 +50,14 @@ npm run build
 ## Funzionalità
 
 ### 🏠 Panoramica
+
 - KPI cards: spazi disponibili, prenotazioni attive, fatturato totale, totale spazi
 - Barre di avanzamento occupazione per tipologia
 - Azioni rapide di navigazione
 - Elenco prenotazioni recenti
 
 ### 🏢 Gestione Spazi
+
 - Vista griglia e tabella (toggle)
 - Filtri per tipologia (scrivania, sala riunioni, ufficio) e per stato
 - Ricerca per nome spazio
@@ -58,11 +66,13 @@ npm run build
 - Eliminazione spazio
 
 ### 📅 Sistema di Prenotazione — Wizard 3 Step
+
 1. **Selezione spazio** — lista filtrabile degli spazi disponibili
 2. **Dati prenotazione** — nome cliente, data, fascia oraria inizio/fine con calcolo automatico del costo
 3. **Conferma** — riepilogo completo con tariffa stimata
 
 ### 📊 Reportistica & Analytics
+
 - Grafico **torta** — distribuzione tipologie spazi richiesti
 - Grafico **barre** — spazi più prenotati
 - Grafico **linee** — andamento fatturato ultimi 20 giorni
