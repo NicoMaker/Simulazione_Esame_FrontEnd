@@ -102,12 +102,3 @@ cowork-dashboard/
 ├── package.json
 └── README.md
 ```
-
----
-
-## Design
-
-- **Tema**: Dark mode professionale
-- **Palette**: Deep navy · Electric blue · Emerald · Violet
-- **Font**: Syne (titoli) + DM Sans (corpo)
-- **Responsive**: Desktop, tablet e mobile con sidebar collassabile
