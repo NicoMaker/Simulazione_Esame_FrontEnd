@@ -375,7 +375,9 @@ function Step3Confirm({ space, form }) {
           </div>
           <div className="confirm-detail-row">
             <div className="confirm-detail-label">Tariffa oraria</div>
-            <div className="confirm-detail-value">€{formatPrice(space.hourlyRate)}/h</div>
+            <div className="confirm-detail-value">
+              €{formatPrice(space.hourlyRate)}/h
+            </div>
           </div>
           {form.notes && (
             <div className="confirm-detail-row">
@@ -521,7 +523,8 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
               >
                 {availableSpaces.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name} — €{formatPrice(s.hourlyRate)}/h ({SPACE_TYPE_LABELS[s.type]})
+                    {s.name} — €{formatPrice(s.hourlyRate)}/h (
+                    {SPACE_TYPE_LABELS[s.type]})
                   </option>
                 ))}
               </select>

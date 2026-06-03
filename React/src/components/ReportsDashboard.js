@@ -16,7 +16,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { TrendingUp, Calendar, Clock, Euro, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  TrendingUp,
+  Calendar,
+  Clock,
+  Euro,
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const COLORS_PIE = ["#4f7cff", "#a855f7", "#10d9a0"];
 
@@ -90,7 +99,11 @@ function TimeNav({ mode, setMode, offset, setOffset }) {
     }
     if (mode === "months") {
       const d = new Date(now.getFullYear(), now.getMonth() - offset * 6, 1);
-      const end = new Date(now.getFullYear(), now.getMonth() - offset * 6 + 5, 1);
+      const end = new Date(
+        now.getFullYear(),
+        now.getMonth() - offset * 6 + 5,
+        1,
+      );
       return `${d.toLocaleDateString("it-IT", { month: "long", year: "numeric" })} – ${end.toLocaleDateString("it-IT", { month: "long", year: "numeric" })}`;
     }
     if (mode === "years") {
@@ -100,23 +113,28 @@ function TimeNav({ mode, setMode, offset, setOffset }) {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      gap: 12,
-      flexWrap: "wrap",
-      marginBottom: 20,
-      padding: "12px 18px",
-      background: "var(--surface-2, var(--bg-secondary))",
-      borderRadius: 12,
-      border: "1px solid var(--border)",
-    }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        flexWrap: "wrap",
+        marginBottom: 20,
+        padding: "12px 18px",
+        background: "var(--surface-2, var(--bg-secondary))",
+        borderRadius: 12,
+        border: "1px solid var(--border)",
+      }}
+    >
       {/* Mode selector */}
       <div style={{ display: "flex", gap: 4 }}>
         {modes.map((m) => (
           <button
             key={m.id}
-            onClick={() => { setMode(m.id); setOffset(0); }}
+            onClick={() => {
+              setMode(m.id);
+              setOffset(0);
+            }}
             style={{
               padding: "5px 12px",
               borderRadius: 8,
@@ -135,43 +153,58 @@ function TimeNav({ mode, setMode, offset, setOffset }) {
       </div>
 
       {/* Navigation arrows + label */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginLeft: "auto",
+        }}
+      >
         <button
           onClick={() => setOffset((o) => o + 1)}
           style={{
-            width: 30, height: 30,
+            width: 30,
+            height: 30,
             borderRadius: 8,
             border: "1px solid var(--border)",
             background: "transparent",
             color: "var(--text-secondary)",
             cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           title="Periodo precedente"
         >
           <ChevronLeft size={16} />
         </button>
-        <span style={{
-          fontSize: "0.82rem",
-          fontWeight: 600,
-          color: "var(--text-primary, var(--text))",
-          minWidth: 200,
-          textAlign: "center",
-        }}>
+        <span
+          style={{
+            fontSize: "0.82rem",
+            fontWeight: 600,
+            color: "var(--text-primary, var(--text))",
+            minWidth: 200,
+            textAlign: "center",
+          }}
+        >
           {getPeriodLabel()}
         </span>
         <button
           onClick={() => setOffset((o) => Math.max(0, o - 1))}
           disabled={offset === 0}
           style={{
-            width: 30, height: 30,
+            width: 30,
+            height: 30,
             borderRadius: 8,
             border: "1px solid var(--border)",
             background: "transparent",
             color: offset === 0 ? "var(--text-muted)" : "var(--text-secondary)",
             cursor: offset === 0 ? "not-allowed" : "pointer",
             opacity: offset === 0 ? 0.4 : 1,
-            display: "flex", alignItems: "center", justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           title="Periodo successivo"
         >
@@ -246,7 +279,10 @@ export default function ReportsDashboard() {
       return Array.from({ length: 14 }, (_, i) => {
         const d = new Date(now);
         d.setDate(now.getDate() - chartOffset * 14 - (13 - i));
-        const key = d.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit" });
+        const key = d.toLocaleDateString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+        });
         const dayBookings = confirmed.filter((b) => {
           const bd = new Date(b.date);
           return bd.toDateString() === d.toDateString();
@@ -288,13 +324,20 @@ export default function ReportsDashboard() {
       return Array.from({ length: 6 }, (_, i) => {
         const monthOffset = chartOffset * 6 + (5 - i);
         const d = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1);
-        const nextM = new Date(now.getFullYear(), now.getMonth() - monthOffset + 1, 1);
+        const nextM = new Date(
+          now.getFullYear(),
+          now.getMonth() - monthOffset + 1,
+          1,
+        );
 
         const monthBookings = confirmed.filter((b) => {
           const bd = new Date(b.date);
           return bd >= d && bd < nextM;
         });
-        const label = d.toLocaleDateString("it-IT", { month: "short", year: "2-digit" });
+        const label = d.toLocaleDateString("it-IT", {
+          month: "short",
+          year: "2-digit",
+        });
         return {
           label,
           Fatturato: monthBookings.reduce((s, b) => s + b.totalCost, 0),
@@ -345,7 +388,14 @@ export default function ReportsDashboard() {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  const xInterval = chartMode === "years" ? 0 : chartMode === "months" ? 0 : chartMode === "weeks" ? 0 : 1;
+  const xInterval =
+    chartMode === "years"
+      ? 0
+      : chartMode === "months"
+        ? 0
+        : chartMode === "weeks"
+          ? 0
+          : 1;
 
   return (
     <div>
@@ -416,7 +466,9 @@ export default function ReportsDashboard() {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   formatter={(v) => (
-                    <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
+                    <span
+                      style={{ color: "var(--text-secondary)", fontSize: 12 }}
+                    >
                       {v}
                     </span>
                   )}
@@ -464,9 +516,7 @@ export default function ReportsDashboard() {
       {/* Line: revenue over time */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="card-header">
-          <div className="card-title">
-            📈 Andamento Fatturato
-          </div>
+          <div className="card-title">📈 Andamento Fatturato</div>
           <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
             Tasso di occupazione medio:{" "}
             <strong style={{ color: "var(--accent)" }}>{occupancyRate}%</strong>
@@ -479,13 +529,23 @@ export default function ReportsDashboard() {
               margin={{ top: 0, right: 20, bottom: 0, left: -10 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={xInterval} />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 10 }}
+                interval={xInterval}
+              />
               <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
-              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                tick={{ fontSize: 10 }}
+              />
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 formatter={(v) => (
-                  <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
+                  <span
+                    style={{ color: "var(--text-secondary)", fontSize: 12 }}
+                  >
                     {v}
                   </span>
                 )}
@@ -519,7 +579,13 @@ export default function ReportsDashboard() {
         <div className="card-header">
           <div className="card-title">
             📅 Confronto Periodi —{" "}
-            <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.85rem" }}>
+            <span
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 400,
+                fontSize: "0.85rem",
+              }}
+            >
               {chartMode === "days" && "per giorno"}
               {chartMode === "weeks" && "per settimana"}
               {chartMode === "months" && "per mese"}
@@ -534,12 +600,18 @@ export default function ReportsDashboard() {
               margin={{ top: 0, right: 20, bottom: 0, left: -10 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={{ fontSize: 11 }} interval={xInterval} />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 11 }}
+                interval={xInterval}
+              />
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 formatter={(v) => (
-                  <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
+                  <span
+                    style={{ color: "var(--text-secondary)", fontSize: 12 }}
+                  >
                     {v}
                   </span>
                 )}
