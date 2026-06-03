@@ -16,7 +16,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { TrendingUp, Calendar, Clock, Euro, Search, X } from "lucide-react";
+import { TrendingUp, Calendar, Clock, Euro, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const COLORS_PIE = ["#4f7cff", "#a855f7", "#10d9a0"];
 
@@ -41,15 +41,7 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-function PieLabel({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  name,
-}) {
+function PieLabel({ cx, cy, midAngle, innerRadius, outerRadius, percent }) {
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -69,11 +61,151 @@ function PieLabel({
   ) : null;
 }
 
+// ─── Time Navigation Controls ───────────────────────────────────────────────
+function TimeNav({ mode, setMode, offset, setOffset }) {
+  const modes = [
+    { id: "days", label: "Giorni" },
+    { id: "weeks", label: "Settimane" },
+    { id: "months", label: "Mesi" },
+    { id: "years", label: "Anni" },
+  ];
+
+  const getPeriodLabel = () => {
+    const now = new Date();
+    if (mode === "days") {
+      const start = new Date(now);
+      start.setDate(now.getDate() - (offset + 1) * 14 + 1);
+      const end = new Date(now);
+      end.setDate(now.getDate() - offset * 14);
+      return `${start.toLocaleDateString("it-IT", { day: "2-digit", month: "short" })} – ${end.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" })}`;
+    }
+    if (mode === "weeks") {
+      const weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - now.getDay() + 1 - offset * 7 * 4);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 27);
+      return `${weekStart.toLocaleDateString("it-IT", { day: "2-digit", month: "short" })} – ${weekEnd.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" })}`;
+    }
+    if (mode === "months") {
+      const d = new Date(now.getFullYear(), now.getMonth() - offset * 6, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - offset * 6 + 5, 1);
+      return `${d.toLocaleDateString("it-IT", { month: "long", year: "numeric" })} – ${end.toLocaleDateString("it-IT", { month: "long", year: "numeric" })}`;
+    }
+    if (mode === "years") {
+      const year = now.getFullYear() - offset;
+      return `Anno ${year}`;
+    }
+  };
+
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      flexWrap: "wrap",
+      marginBottom: 20,
+      padding: "12px 18px",
+      background: "var(--surface-2, var(--bg-secondary))",
+      borderRadius: 12,
+      border: "1px solid var(--border)",
+    }}>
+      {/* Mode selector */}
+      <div style={{ display: "flex", gap: 4 }}>
+        {modes.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => { setMode(m.id); setOffset(0); }}
+            style={{
+              padding: "5px 12px",
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: mode === m.id ? "var(--accent)" : "transparent",
+              color: mode === m.id ? "#fff" : "var(--text-secondary)",
+              fontSize: "0.78rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.15s",
+            }}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Navigation arrows + label */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+        <button
+          onClick={() => setOffset((o) => o + 1)}
+          style={{
+            width: 30, height: 30,
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+            background: "transparent",
+            color: "var(--text-secondary)",
+            cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+          title="Periodo precedente"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <span style={{
+          fontSize: "0.82rem",
+          fontWeight: 600,
+          color: "var(--text-primary, var(--text))",
+          minWidth: 200,
+          textAlign: "center",
+        }}>
+          {getPeriodLabel()}
+        </span>
+        <button
+          onClick={() => setOffset((o) => Math.max(0, o - 1))}
+          disabled={offset === 0}
+          style={{
+            width: 30, height: 30,
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+            background: "transparent",
+            color: offset === 0 ? "var(--text-muted)" : "var(--text-secondary)",
+            cursor: offset === 0 ? "not-allowed" : "pointer",
+            opacity: offset === 0 ? 0.4 : 1,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+          title="Periodo successivo"
+        >
+          <ChevronRight size={16} />
+        </button>
+        {offset > 0 && (
+          <button
+            onClick={() => setOffset(0)}
+            style={{
+              padding: "4px 10px",
+              borderRadius: 8,
+              border: "1px solid var(--accent)",
+              background: "transparent",
+              color: "var(--accent)",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Oggi
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ReportsDashboard() {
   const { bookings, spaces } = useApp();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [cancelledFilter, setCancelledFilter] = useState(false);
+
+  // Time navigation state
+  const [chartMode, setChartMode] = useState("days"); // days | weeks | months | years
+  const [chartOffset, setChartOffset] = useState(0);
 
   const confirmed = bookings.filter((b) => b.status === "confirmed");
 
@@ -103,43 +235,96 @@ export default function ReportsDashboard() {
     .sort((a, b) => b.prenotazioni - a.prenotazioni)
     .slice(0, 7);
 
-  // ─── Line: revenue over time (last 20 days) ───
-  const last20 = Array.from({ length: 20 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (19 - i));
-    const key = d.toLocaleDateString("it-IT", {
-      day: "2-digit",
-      month: "2-digit",
-    });
-    const dayBookings = confirmed.filter((b) => {
-      const bd = new Date(b.date);
-      return bd.toDateString() === d.toDateString();
-    });
-    return {
-      giorno: key,
-      Fatturato: dayBookings.reduce((s, b) => s + b.totalCost, 0),
-      Prenotazioni: dayBookings.length,
-    };
-  });
+  // ─── Dynamic chart data based on mode + offset ───
+  const now = new Date();
 
-  // ─── Bar: weekly comparison ───
-  const weeklyRevenue = Array.from({ length: 4 }, (_, w) => {
-    const weekLabel = `Settimana ${4 - w}`;
-    const start = 7 * (w + 1);
-    const end = 7 * w;
-    const weekBookings = confirmed.filter((b) => {
-      const daysAgo = (Date.now() - new Date(b.date).getTime()) / 86400000;
-      return daysAgo >= end && daysAgo < start;
-    });
-    return {
-      settimana: weekLabel,
-      Fatturato: weekBookings.reduce((s, b) => s + b.totalCost, 0),
-      Prenotazioni: weekBookings.length,
-    };
-  }).reverse();
+  const trendData = (() => {
+    if (chartMode === "days") {
+      // 14 days window, offset shifts by 14 days
+      return Array.from({ length: 14 }, (_, i) => {
+        const d = new Date(now);
+        d.setDate(now.getDate() - chartOffset * 14 - (13 - i));
+        const key = d.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit" });
+        const dayBookings = confirmed.filter((b) => {
+          const bd = new Date(b.date);
+          return bd.toDateString() === d.toDateString();
+        });
+        return {
+          label: key,
+          Fatturato: dayBookings.reduce((s, b) => s + b.totalCost, 0),
+          Prenotazioni: dayBookings.length,
+        };
+      });
+    }
+
+    if (chartMode === "weeks") {
+      // 8 weeks window, offset shifts by 8 weeks
+      return Array.from({ length: 8 }, (_, i) => {
+        const weekIdx = chartOffset * 8 + (7 - i);
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - weekStart.getDay() + 1 - weekIdx * 7);
+        weekStart.setHours(0, 0, 0, 0);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        weekEnd.setHours(23, 59, 59, 999);
+
+        const weekBookings = confirmed.filter((b) => {
+          const bd = new Date(b.date);
+          return bd >= weekStart && bd <= weekEnd;
+        });
+        const label = `${weekStart.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit" })}`;
+        return {
+          label,
+          Fatturato: weekBookings.reduce((s, b) => s + b.totalCost, 0),
+          Prenotazioni: weekBookings.length,
+        };
+      });
+    }
+
+    if (chartMode === "months") {
+      // 6 months window, offset shifts by 6 months
+      return Array.from({ length: 6 }, (_, i) => {
+        const monthOffset = chartOffset * 6 + (5 - i);
+        const d = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1);
+        const nextM = new Date(now.getFullYear(), now.getMonth() - monthOffset + 1, 1);
+
+        const monthBookings = confirmed.filter((b) => {
+          const bd = new Date(b.date);
+          return bd >= d && bd < nextM;
+        });
+        const label = d.toLocaleDateString("it-IT", { month: "short", year: "2-digit" });
+        return {
+          label,
+          Fatturato: monthBookings.reduce((s, b) => s + b.totalCost, 0),
+          Prenotazioni: monthBookings.length,
+        };
+      });
+    }
+
+    if (chartMode === "years") {
+      // 3 years window, offset shifts by 1 year at a time, shown as months
+      const year = now.getFullYear() - chartOffset;
+      return Array.from({ length: 12 }, (_, i) => {
+        const d = new Date(year, i, 1);
+        const nextM = new Date(year, i + 1, 1);
+        const monthBookings = confirmed.filter((b) => {
+          const bd = new Date(b.date);
+          return bd >= d && bd < nextM;
+        });
+        const label = d.toLocaleDateString("it-IT", { month: "short" });
+        return {
+          label,
+          Fatturato: monthBookings.reduce((s, b) => s + b.totalCost, 0),
+          Prenotazioni: monthBookings.length,
+        };
+      });
+    }
+
+    return [];
+  })();
 
   // ─── Occupancy rate ───
-  const totalSlots = spaces.length * 20; // theoretical
+  const totalSlots = spaces.length * 20;
   const occupancyRate = Math.round((confirmed.length / totalSlots) * 100);
 
   // ─── Filtered table ───
@@ -157,6 +342,8 @@ export default function ReportsDashboard() {
       return true;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const xInterval = chartMode === "years" ? 0 : chartMode === "months" ? 0 : chartMode === "weeks" ? 0 : 1;
 
   return (
     <div>
@@ -227,9 +414,7 @@ export default function ReportsDashboard() {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   formatter={(v) => (
-                    <span
-                      style={{ color: "var(--text-secondary)", fontSize: 12 }}
-                    >
+                    <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
                       {v}
                     </span>
                   )}
@@ -266,11 +451,19 @@ export default function ReportsDashboard() {
         </div>
       </div>
 
+      {/* ─── Time Navigation ─── */}
+      <TimeNav
+        mode={chartMode}
+        setMode={setChartMode}
+        offset={chartOffset}
+        setOffset={setChartOffset}
+      />
+
       {/* Line: revenue over time */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="card-header">
           <div className="card-title">
-            📈 Andamento Fatturato (ultimi 20 giorni)
+            📈 Andamento Fatturato
           </div>
           <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
             Tasso di occupazione medio:{" "}
@@ -280,23 +473,17 @@ export default function ReportsDashboard() {
         <div className="card-body" style={{ paddingTop: 8 }}>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart
-              data={last20}
+              data={trendData}
               margin={{ top: 0, right: 20, bottom: 0, left: -10 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="giorno" tick={{ fontSize: 10 }} interval={3} />
+              <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={xInterval} />
               <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
-              <YAxis
-                yAxisId="right"
-                orientation="right"
-                tick={{ fontSize: 10 }}
-              />
+              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} />
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 formatter={(v) => (
-                  <span
-                    style={{ color: "var(--text-secondary)", fontSize: 12 }}
-                  >
+                  <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
                     {v}
                   </span>
                 )}
@@ -325,26 +512,32 @@ export default function ReportsDashboard() {
         </div>
       </div>
 
-      {/* Weekly comparison bar */}
+      {/* Bar: period comparison */}
       <div className="card" style={{ marginBottom: 24 }}>
         <div className="card-header">
-          <div className="card-title">📅 Confronto Settimanale</div>
+          <div className="card-title">
+            📅 Confronto Periodi —{" "}
+            <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.85rem" }}>
+              {chartMode === "days" && "per giorno"}
+              {chartMode === "weeks" && "per settimana"}
+              {chartMode === "months" && "per mese"}
+              {chartMode === "years" && "per mese (anno selezionato)"}
+            </span>
+          </div>
         </div>
         <div className="card-body" style={{ paddingTop: 8 }}>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart
-              data={weeklyRevenue}
+              data={trendData}
               margin={{ top: 0, right: 20, bottom: 0, left: -10 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="settimana" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="label" tick={{ fontSize: 11 }} interval={xInterval} />
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 formatter={(v) => (
-                  <span
-                    style={{ color: "var(--text-secondary)", fontSize: 12 }}
-                  >
+                  <span style={{ color: "var(--text-secondary)", fontSize: 12 }}>
                     {v}
                   </span>
                 )}
