@@ -13,6 +13,7 @@ Dashboard professionale per la gestione di spazi co-working.
 | **Lucide React** | Icone                                                  |
 | **CSS Custom**   | Design system con variabili CSS (no framework esterno) |
 | **Google Fonts** | Syne (display) + DM Sans (body)                        |
+| **Vite 5**       | Build tool e dev server                                |
 
 ---
 
@@ -26,7 +27,6 @@ Installa **Node.js LTS** da [nodejs.org](https://nodejs.org) se non lo hai già.
 
 ```bash
 npm install
-npm i
 ```
 
 > Attendi il completamento (circa 1–2 minuti, scarica ~1400 pacchetti)
@@ -34,15 +34,23 @@ npm i
 ### 3. Avvia l'applicazione
 
 ```bash
-npm run start
+npm run dev
 ```
 
-> Si apre automaticamente il browser su **http://localhost:3000**
+> Si apre automaticamente il browser su **http://localhost:5173**
 
 ### 4. Build per produzione (opzionale)
 
 ```bash
 npm run build
+```
+
+> I file ottimizzati vengono generati nella cartella `dist/`
+
+### 5. Anteprima build di produzione (opzionale)
+
+```bash
+npm run preview
 ```
 
 ---
@@ -85,20 +93,20 @@ npm run build
 ## Struttura del Progetto
 
 ```
-cowork-dashboard/
-├── public/
-│   └── index.html
-├── src/
-│   ├── App.js                    # Root + Context globale (stato condiviso)
-│   ├── data.js                   # Dati hardcoded: spazi + prenotazioni
-│   ├── styles.css                # Design system completo (variabili CSS)
-│   ├── index.js                  # Entry point React
-│   └── components/
-│       ├── Layout.js             # Shell: Sidebar + Topbar
-│       ├── DashboardHome.js      # Pagina Dashboard
-│       ├── SpacesManager.js      # Gestione Spazi
-│       ├── BookingSystem.js      # Wizard Prenotazione
-│       └── ReportsDashboard.js   # Analytics & Report
+cowork-hub/
+├── index.html                    # Entry HTML (gestito da Vite)
+├── vite.config.js                # Configurazione Vite
 ├── package.json
-└── README.md
+├── README.md
+└── src/
+    ├── main.jsx                  # Entry point React
+    ├── App.jsx                   # Root + Context globale (stato condiviso)
+    ├── data.jsx                  # Dati hardcoded: spazi + prenotazioni
+    ├── styles.css                # Design system completo (variabili CSS)
+    └── components/
+        ├── Layout.jsx            # Shell: Sidebar + Topbar
+        ├── DashboardHome.jsx     # Pagina Dashboard
+        ├── SpacesManager.jsx     # Gestione Spazi
+        ├── BookingSystem.jsx     # Wizard Prenotazione
+        └── ReportsDashboard.jsx  # Analytics & Report
 ```
