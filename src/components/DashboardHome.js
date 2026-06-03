@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { SPACE_TYPE_LABELS } from "../data";
 
+const formatPrice = (n) => Number(n).toLocaleString("it-IT");
+
 function StatCard({ icon: Icon, label, value, delta, color, prefix = "" }) {
   return (
     <div className={`stat-card ${color}`}>
@@ -63,7 +65,7 @@ function RecentBookingRow({ booking }) {
           fontFamily: "var(--font-display)",
         }}
       >
-        €{booking.totalCost}
+        €{formatPrice(booking.totalCost)}
       </td>
       <td>
         <span className={`badge badge-${booking.status}`}>

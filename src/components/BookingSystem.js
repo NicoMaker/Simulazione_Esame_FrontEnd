@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 
 const TYPE_ICONS = { desk: MonitorPlay, meeting: Users, office: Briefcase };
+
+const formatPrice = (n) => Number(n).toLocaleString("it-IT");
 const TYPE_COLORS = {
   desk: "var(--accent)",
   meeting: "var(--violet)",
@@ -129,7 +131,7 @@ function Step1SelectSpace({
                   </div>
                 </div>
                 <div className="space-select-rate">
-                  €{space.hourlyRate}
+                  €{formatPrice(space.hourlyRate)}
                   <span
                     style={{
                       fontSize: "0.7rem",
@@ -186,7 +188,7 @@ function Step2BookingForm({ form, setForm, errors, space }) {
         <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
           Spazio selezionato:{" "}
           <strong style={{ color: "var(--accent)" }}>{space?.name}</strong> · €
-          {space?.hourlyRate}/h
+          {formatPrice(space?.hourlyRate)}/h
         </div>
       </div>
       <div className="form-grid">
@@ -281,7 +283,7 @@ function Step2BookingForm({ form, setForm, errors, space }) {
                       fontSize: "1rem",
                     }}
                   >
-                    €{(hours * space.hourlyRate).toFixed(2)}
+                    €{formatPrice((hours * space.hourlyRate).toFixed(2))}
                   </strong>
                 </span>
               </div>
@@ -373,7 +375,7 @@ function Step3Confirm({ space, form }) {
           </div>
           <div className="confirm-detail-row">
             <div className="confirm-detail-label">Tariffa oraria</div>
-            <div className="confirm-detail-value">€{space.hourlyRate}/h</div>
+            <div className="confirm-detail-value">€{formatPrice(space.hourlyRate)}/h</div>
           </div>
           {form.notes && (
             <div className="confirm-detail-row">
@@ -392,7 +394,7 @@ function Step3Confirm({ space, form }) {
           )}
           <div className="confirm-detail-row confirm-total">
             <div className="confirm-detail-label">Totale stimato</div>
-            <div className="confirm-detail-value">€{total}</div>
+            <div className="confirm-detail-value">€{formatPrice(total)}</div>
           </div>
         </div>
       </div>
@@ -519,7 +521,7 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
               >
                 {availableSpaces.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name} — €{s.hourlyRate}/h ({SPACE_TYPE_LABELS[s.type]})
+                    {s.name} — €{formatPrice(s.hourlyRate)}/h ({SPACE_TYPE_LABELS[s.type]})
                   </option>
                 ))}
               </select>
@@ -606,7 +608,7 @@ function EditBookingModal({ booking, spaces, onClose, onSave }) {
                     fontSize: "1rem",
                   }}
                 >
-                  €{costPreview.cost}
+                  €{formatPrice(costPreview.cost)}
                 </strong>
               </span>
             </div>
@@ -803,7 +805,7 @@ function BookingsList({ bookings, spaces, onEdit, onDelete, onCancel }) {
                           color: "var(--emerald)",
                         }}
                       >
-                        €{b.totalCost}
+                        €{formatPrice(b.totalCost)}
                       </td>
                       <td>
                         <span
@@ -962,7 +964,7 @@ export default function BookingSystem() {
               }}
             >
               {success.customerName} · {success.spaceName} · €
-              {success.totalCost}
+              {formatPrice(success.totalCost)}
             </div>
           </div>
           <button
@@ -1148,7 +1150,7 @@ export default function BookingSystem() {
                         flexShrink: 0,
                       }}
                     >
-                      €{b.totalCost}
+                      €{formatPrice(b.totalCost)}
                     </div>
                   </div>
                 );

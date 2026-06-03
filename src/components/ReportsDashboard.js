@@ -20,6 +20,8 @@ import { TrendingUp, Calendar, Clock, Euro, Search, X, ChevronLeft, ChevronRight
 
 const COLORS_PIE = ["#4f7cff", "#a855f7", "#10d9a0"];
 
+const formatPrice = (n) => Number(n).toLocaleString("it-IT");
+
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
@@ -383,7 +385,7 @@ export default function ReportsDashboard() {
           <div className="stat-icon violet">
             <Euro size={20} />
           </div>
-          <div className="stat-value">€{avgRevenue}</div>
+          <div className="stat-value">€{formatPrice(avgRevenue)}</div>
           <div className="stat-label">Valore Medio Prenotazione</div>
         </div>
       </div>
@@ -714,7 +716,7 @@ export default function ReportsDashboard() {
                           fontFamily: "var(--font-display)",
                         }}
                       >
-                        €{b.totalCost}
+                        €{formatPrice(b.totalCost)}
                       </td>
                       <td>
                         <span className={`badge badge-${b.status}`}>

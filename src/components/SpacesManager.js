@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 
 const TYPE_ICONS = { desk: MonitorPlay, meeting: Users, office: Briefcase };
+
+const formatPrice = (n) => Number(n).toLocaleString("it-IT");
 const TYPE_COLORS = {
   desk: "var(--accent)",
   meeting: "var(--violet)",
@@ -200,7 +202,7 @@ function SpaceFormModal({ onClose, onSave, initialData, title }) {
             >
               💡 Tariffa giornaliera stimata (8h):{" "}
               <strong style={{ color: "var(--accent)" }}>
-                €{(form.hourlyRate * 8).toFixed(0)}
+                €{formatPrice((form.hourlyRate * 8).toFixed(0))}
               </strong>
             </div>
           )}
@@ -294,7 +296,7 @@ function SpaceCardGrid({ space, onStatusChange, onEdit, onDelete }) {
         )}
       </div>
       <div className="space-card-rate">
-        €{space.hourlyRate} <span>/ora</span>
+        €{formatPrice(space.hourlyRate)} <span>/ora</span>
       </div>
       <div className="space-card-actions">
         {space.status !== "available" && (
@@ -516,7 +518,7 @@ export default function SpacesManager() {
                         fontFamily: "var(--font-display)",
                       }}
                     >
-                      €{s.hourlyRate}
+                      €{formatPrice(s.hourlyRate)}
                     </td>
                     <td>
                       <div
